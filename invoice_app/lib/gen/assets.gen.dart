@@ -11,6 +11,19 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/services.dart';
 
+class $AssetsFontsGen {
+  const $AssetsFontsGen();
+
+  /// File path: assets/fonts/LeagueSpartan-Bold.ttf
+  String get leagueSpartanBold => 'assets/fonts/LeagueSpartan-Bold.ttf';
+
+  /// File path: assets/fonts/LeagueSpartan-Medium.ttf
+  String get leagueSpartanMedium => 'assets/fonts/LeagueSpartan-Medium.ttf';
+
+  /// List of all assets
+  List<String> get values => [leagueSpartanBold, leagueSpartanMedium];
+}
+
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
@@ -97,6 +110,7 @@ class $AssetsJsonGen {
 class Assets {
   Assets._();
 
+  static const $AssetsFontsGen fonts = $AssetsFontsGen();
   static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
   static const $AssetsJsonGen json = $AssetsJsonGen();
