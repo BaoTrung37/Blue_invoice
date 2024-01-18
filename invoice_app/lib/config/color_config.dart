@@ -12,6 +12,8 @@ class DarkColors {
   static const backgroundPrimary = Color(0xFF141625);
   static const backgroundSecondary = Color(0xFF1E2139);
 
+  static const lightBackground = Color(0xFFF8F8FB);
+
   static const button1Color = Color(0xFF7C5DFA);
   static const hoverButton1Color = Color(0xFF9277FF);
 

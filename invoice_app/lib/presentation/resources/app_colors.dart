@@ -9,6 +9,7 @@ class AppColors {
   final Color action;
   final Color backgroundPrimary;
   final Color backgroundSecondary;
+  final Color lightBackground;
   final Color button1Color;
   final Color hoverButton1Color;
   final Color button2Color;
@@ -28,6 +29,7 @@ class AppColors {
     required this.action,
     required this.backgroundPrimary,
     required this.backgroundSecondary,
+    required this.lightBackground,
     required this.button1Color,
     required this.hoverButton1Color,
     required this.button2Color,
@@ -49,6 +51,7 @@ final colorsDark = AppColors(
   action: DarkColors.action,
   backgroundPrimary: DarkColors.backgroundPrimary,
   backgroundSecondary: DarkColors.backgroundSecondary,
+  lightBackground: DarkColors.lightBackground,
   button1Color: DarkColors.button1Color,
   hoverButton1Color: DarkColors.hoverButton1Color,
   button2Color: DarkColors.button2Color,
