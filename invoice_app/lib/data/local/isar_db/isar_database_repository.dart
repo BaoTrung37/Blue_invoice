@@ -1,5 +1,8 @@
+import 'package:invoice_app/data/model/invoice_collection.dart';
+
 abstract class IsarDatabaseRepository {
   Future<void> initIsarDataBase();
   Future<void> importJson();
-  Future<void> loadFirstInvoice(String json);
+  Future<bool> clearDatabase();
+  Future<List<InvoiceCollection>> getInvoices();
 }

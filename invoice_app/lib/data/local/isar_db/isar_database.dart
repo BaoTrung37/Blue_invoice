@@ -22,13 +22,8 @@ class IsarDatabase implements IsarDatabaseRepository {
   }
 
   @override
-  Future<void> loadFirstInvoice(String json) async {}
-
-  @override
   Future<void> importJson() async {
-    await isar.writeTxn(() async {
-      await isar.clear();
-    });
+    await clearDatabase();
 
     final jsonString = await rootBundle.loadString('assets/json/data.json');
     final jsonData = json.decode(jsonString).cast<Map<String, dynamic>>();
@@ -40,5 +35,19 @@ class IsarDatabase implements IsarDatabaseRepository {
         await isar.invoiceCollections.put(invoiceCollection);
       }
     });
+  }
+
+  @override
+  Future<bool> clearDatabase() async {
+    return await isar.writeTxn(() async {
+      await isar.clear();
+      return true;
+    });
+  }
+
+  @override
+  Future<List<InvoiceCollection>> getInvoices() async {
+    //
+    return [];
   }
 }
