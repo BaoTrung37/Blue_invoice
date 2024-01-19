@@ -5,6 +5,8 @@ import 'package:invoice_app/gen/assets.gen.dart';
 import 'package:invoice_app/presentation/resources/app_colors.dart';
 import 'package:invoice_app/presentation/resources/app_text_styles.dart';
 
+import '../home.dart';
+
 @RoutePage()
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -20,24 +22,11 @@ class HomeScreen extends StatelessWidget {
             children: [
               _buildHeading(),
               24.verticalSpace,
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
-                color: context.colors.backgroundSecondary,
-                child: Row(
-                  children: [
-                    const Text('RT3080'),
-                    4.horizontalSpace,
-                    const Text('Jensen Huang'),
-                    4.horizontalSpace,
-                    const Column(
-                      children: [
-                        Text('Due 19 Aug 2021'),
-                        Text('1000'),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+              const InvoiceItem(),
+              24.verticalSpace,
+              const InvoiceItem(),
+              24.verticalSpace,
+              const InvoiceItem(),
             ],
           ),
         ),
@@ -55,7 +44,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             const Text(
               'Invoices',
-              style: AppTextStyles.heading1,
+              style: AppTextStyles.h1,
             ),
             8.verticalSpace,
             const Text('No Invoices'),

@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 
 class AppTextStyles {
-  static const heading1 = TextStyle(
+  static const h1 = TextStyle(
     fontWeight: FontWeight.w700,
     fontSize: 32,
     height: 1.125,
   );
 
-  static const heading2 = TextStyle(
+  static const h2 = TextStyle(
     fontWeight: FontWeight.w700,
     fontSize: 20,
     height: 1.1,
   );
 
-  static const heading3 = TextStyle(
+  static const h3 = TextStyle(
     fontWeight: FontWeight.w700,
     fontSize: 16,
     height: 1.5,
   );
 
-  static const heading3Small = TextStyle(
+  static const hs3 = TextStyle(
     fontWeight: FontWeight.w700,
     fontSize: 12,
     height: 1.25,
