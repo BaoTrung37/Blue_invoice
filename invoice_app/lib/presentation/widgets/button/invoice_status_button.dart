@@ -50,7 +50,7 @@ class InvoiceStatusButton extends StatelessWidget {
       child: Center(
         child: Text(
           '● ${invoiceStatusType.name}',
-          style: AppTextStyles.body1.copyWith(
+          style: AppTextStyles.body2.copyWith(
             color: _getTextColor(),
           ),
         ),

@@ -27,13 +27,13 @@ class AppTextStyles {
 
   static const body1 = TextStyle(
     fontWeight: FontWeight.w500,
-    fontSize: 12,
+    fontSize: 14,
     height: 1.25,
   );
 
   static const body2 = TextStyle(
     fontWeight: FontWeight.w500,
-    fontSize: 11,
+    fontSize: 12,
     height: 1.63,
   );
 }

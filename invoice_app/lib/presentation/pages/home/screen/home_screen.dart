@@ -2,10 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:invoice_app/gen/assets.gen.dart';
+import 'package:invoice_app/presentation/pages/home/widgets/invoice_item.dart';
 import 'package:invoice_app/presentation/resources/app_colors.dart';
 import 'package:invoice_app/presentation/resources/app_text_styles.dart';
-
-import '../home.dart';
 
 @RoutePage()
 class HomeScreen extends StatelessWidget {
@@ -22,11 +21,7 @@ class HomeScreen extends StatelessWidget {
             children: [
               _buildHeading(),
               24.verticalSpace,
-              const InvoiceItem(),
-              24.verticalSpace,
-              const InvoiceItem(),
-              24.verticalSpace,
-              const InvoiceItem(),
+              const _MainContent(),
             ],
           ),
         ),
@@ -84,6 +79,62 @@ class HomeScreen extends StatelessWidget {
               'New Invoice',
               style: AppTextStyles.body1,
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MainContent extends StatelessWidget {
+  const _MainContent();
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildInvoiceList();
+    // return _buildEmptyInvoiceList();
+  }
+
+  Widget _buildInvoiceList() {
+    return Column(
+      children: [
+        const InvoiceItem(),
+        24.verticalSpace,
+        const InvoiceItem(),
+        24.verticalSpace,
+        const InvoiceItem(),
+      ],
+    );
+  }
+
+  Widget _buildEmptyInvoiceList() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 40.w),
+      child: Column(
+        children: [
+          Assets.icons.illustrationEmpty.svg(height: 150.h),
+          24.verticalSpace,
+          const Text(
+            'There is nothing here',
+            style: AppTextStyles.h2,
+          ),
+          24.verticalSpace,
+          RichText(
+            text: TextSpan(
+              text: 'Create an invoice by click the ',
+              children: [
+                TextSpan(
+                  text: 'New Invoice ',
+                  style: AppTextStyles.body1.copyWith(
+                    color: const Color(0xFFCED3E9),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const TextSpan(text: 'button and get started'),
+              ],
+              style: AppTextStyles.body1,
+            ),
+            textAlign: TextAlign.center,
           ),
         ],
       ),
