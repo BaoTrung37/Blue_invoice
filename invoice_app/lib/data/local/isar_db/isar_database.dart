@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
 import 'package:invoice_app/data/local/isar_db/isar_database_repository.dart';
 import 'package:invoice_app/data/model/invoice_collection.dart';
-import 'package:invoice_app/data/model/invoice_entity.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -36,9 +35,8 @@ class IsarDatabase implements IsarDatabaseRepository {
 
     await isar.writeTxn(() async {
       for (final itemData in jsonData) {
-        final invoiceEntity = InvoiceEntity.fromJson(itemData);
-        final invoiceCollection =
-            getInvoiceCollectionFromInvoiceEntity(invoiceEntity);
+        final invoiceCollection = InvoiceCollection.fromJson(itemData);
+
         await isar.invoiceCollections.put(invoiceCollection);
       }
     });

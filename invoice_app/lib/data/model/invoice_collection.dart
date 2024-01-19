@@ -1,83 +1,60 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: invalid_annotation_target
+
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:invoice_app/data/local/isar_db/isar_extension.dart';
-import 'package:invoice_app/data/model/invoice_entity.dart';
 import 'package:isar/isar.dart';
 
+part 'invoice_collection.freezed.dart';
 part 'invoice_collection.g.dart';
 
-@collection
-class InvoiceCollection {
-  Id get isarId => fastHash(id);
+@freezed
+@collectionOnFreezed
+class InvoiceCollection with _$InvoiceCollection {
+  const InvoiceCollection._();
+  const factory InvoiceCollection({
+    @Index(unique: true) required String id,
+    required DateTime createdAt,
+    required DateTime paymentDue,
+    required String description,
+    required int paymentTerms,
+    required String clientName,
+    required String clientEmail,
+    required String status,
+    required Address senderAddress,
+    required Address clientAddress,
+    required List<Item> items,
+    required double total,
+  }) = _InvoiceCollection;
 
-  @Index(unique: true)
-  final String id;
+  Id get invoiceId => Isar.autoIncrement;
 
-  final DateTime createdAt;
-  final DateTime paymentDue;
-  final String description;
-  final int paymentTerms;
-  final String clientName;
-  final String clientEmail;
-  final String status;
-  Address? senderAddress;
-  Address? clientAddress;
-  List<Item>? items;
-  final double total;
-  InvoiceCollection({
-    required this.id,
-    required this.createdAt,
-    required this.paymentDue,
-    required this.description,
-    required this.paymentTerms,
-    required this.clientName,
-    required this.clientEmail,
-    required this.status,
-    this.senderAddress,
-    this.clientAddress,
-    this.items,
-    required this.total,
-  });
+  factory InvoiceCollection.fromJson(Map<String, dynamic> json) =>
+      _$InvoiceCollectionFromJson(json);
 }
 
-@embedded
-class Address {
-  final String? street;
-  final String? city;
-  final String? postCode;
-  final String? country;
-  Address({
-    this.street,
-    this.city,
-    this.postCode,
-    this.country,
-  });
+@freezed
+@Embedded(ignore: {'copyWith'})
+class Address with _$Address {
+  const factory Address({
+    String? street,
+    String? city,
+    String? postCode,
+    String? country,
+  }) = _Address;
+
+  factory Address.fromJson(Map<String, dynamic> json) =>
+      _$AddressFromJson(json);
 }
 
-@embedded
-class Item {
-  final String? name;
-  final int? quantity;
-  final double? price;
-  final double? total;
-  Item({
-    this.name,
-    this.quantity,
-    this.price,
-    this.total,
-  });
-}
+@freezed
+@Embedded(ignore: {'copyWith'})
+class Item with _$Item {
+  const factory Item({
+    String? name,
+    int? quantity,
+    double? price,
+    double? total,
+  }) = _Item;
 
-InvoiceCollection getInvoiceCollectionFromInvoiceEntity(
-    InvoiceEntity invoiceEntity) {
-  return InvoiceCollection(
-    id: invoiceEntity.id,
-    createdAt: invoiceEntity.createdAt,
-    paymentDue: invoiceEntity.paymentDue,
-    description: invoiceEntity.description,
-    paymentTerms: invoiceEntity.paymentTerms,
-    clientName: invoiceEntity.clientName,
-    clientEmail: invoiceEntity.clientEmail,
-    status: invoiceEntity.status,
-    total: invoiceEntity.total,
-  );
+  factory Item.fromJson(Map<String, dynamic> json) => _$ItemFromJson(json);
 }
