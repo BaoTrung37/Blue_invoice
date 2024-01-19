@@ -1,14 +1,27 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:invoice_app/data/local/isar_db/isar_database.dart';
 import 'package:invoice_app/gen/assets.gen.dart';
+import 'package:invoice_app/injection/di.dart';
 import 'package:invoice_app/presentation/pages/home/widgets/invoice_item.dart';
 import 'package:invoice_app/presentation/resources/app_colors.dart';
 import 'package:invoice_app/presentation/resources/app_text_styles.dart';
 
 @RoutePage()
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    getIt.get<IsarDatabase>().importJson();
+  }
 
   @override
   Widget build(BuildContext context) {

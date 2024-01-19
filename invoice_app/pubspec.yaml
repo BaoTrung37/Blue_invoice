@@ -28,7 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 
-isar_version: &isar_version 3.1.0+1
+isar_version: &isar_version ^3.1.0+1 
 
 dependencies:
   flutter:
@@ -72,14 +72,14 @@ dependencies:
   isar_flutter_libs: *isar_version
 
   collection: ^1.18.0
+  path_provider: ^2.1.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   injectable_generator: ^2.4.1
-  retrofit_generator:
   json_serializable: ^6.7.1
-  build_runner: ^2.4.6
+  build_runner: ^2.4.8
   auto_route_generator: ^7.1.1
   flutter_gen_runner: 
   isar_generator: *isar_version
