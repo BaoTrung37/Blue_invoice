@@ -1,12 +1,14 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:invoice_app/data/local/isar_db/isar_database.dart';
 import 'package:invoice_app/gen/assets.gen.dart';
 import 'package:invoice_app/injection/di.dart';
-import 'package:invoice_app/presentation/pages/home/widgets/invoice_item.dart';
+import 'package:invoice_app/presentation/pages/home/cubit/invoice_controller_cubit.dart';
 import 'package:invoice_app/presentation/resources/app_colors.dart';
 import 'package:invoice_app/presentation/resources/app_text_styles.dart';
+
+import '../widgets/invoice_item.dart';
 
 @RoutePage()
 class HomeScreen extends StatefulWidget {
@@ -20,26 +22,31 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    getIt.get<IsarDatabase>().importJson();
+    // getIt.get<IsarDatabase>().importJson();
+
+    getIt.get<InvoiceControllerCubit>().initData();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: context.colors.backgroundPrimary,
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
-          child: Column(
-            children: [
-              _buildHeading(),
-              24.verticalSpace,
-              const _MainContent(),
-            ],
+    return BlocProvider(
+      create: (context) => getIt.get<InvoiceControllerCubit>(),
+      child: Scaffold(
+        backgroundColor: context.colors.backgroundPrimary,
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+            child: Column(
+              children: [
+                _buildHeading(),
+                24.verticalSpace,
+                const _MainContent(),
+              ],
+            ),
           ),
         ),
+        floatingActionButton: _buildNewInvoiceButton(context),
       ),
-      floatingActionButton: _buildNewInvoiceButton(context),
     );
   }
 
@@ -104,19 +111,39 @@ class _MainContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _buildInvoiceList();
-    // return _buildEmptyInvoiceList();
+    return BlocBuilder<InvoiceControllerCubit, InvoiceControllerState>(
+      builder: (context, state) {
+        if (state.invoices.isNotEmpty) {
+          return _buildInvoiceList(state);
+        } else {
+          return _buildEmptyInvoiceList();
+        }
+      },
+    );
   }
 
-  Widget _buildInvoiceList() {
-    return Column(
-      children: [
-        const InvoiceItem(),
-        24.verticalSpace,
-        const InvoiceItem(),
-        24.verticalSpace,
-        const InvoiceItem(),
-      ],
+  Widget _buildInvoiceList(InvoiceControllerState state) {
+    // return Column(
+    //   children: [
+    //     const InvoiceItem(),
+    //     24.verticalSpace,
+    //     const InvoiceItem(),
+    //     24.verticalSpace,
+    //     const InvoiceItem(),
+    //   ],
+    // );
+    final invoices = state.invoices;
+    return Expanded(
+      child: ListView.separated(
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          return InvoiceItem(
+            invoice: invoices[index],
+          );
+        },
+        separatorBuilder: (context, index) => 16.verticalSpace,
+        itemCount: invoices.length,
+      ),
     );
   }
 

@@ -1,7 +1,9 @@
 // ignore_for_file: invalid_annotation_target
 
+import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:invoice_app/data/local/isar_db/isar_extension.dart';
+import 'package:invoice_app/presentation/presentation.dart';
 import 'package:isar/isar.dart';
 
 part 'invoice.freezed.dart';
@@ -27,6 +29,11 @@ class Invoice with _$Invoice {
   }) = _InvoiceCollection;
 
   Id get invoiceId => Isar.autoIncrement;
+
+  InvoiceStatusType get invoiceStatus =>
+      InvoiceStatusType.values.firstWhereOrNull(
+          (element) => element.name.toLowerCase() == status.toLowerCase()) ??
+      InvoiceStatusType.daft;
 
   factory Invoice.fromJson(Map<String, dynamic> json) =>
       _$InvoiceFromJson(json);
