@@ -1,21 +1,27 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:invoice_app/data/model/invoice.dart';
 import 'package:invoice_app/gen/assets.gen.dart';
+import 'package:invoice_app/presentation/utilities/extensions/date_time_extension.dart';
 
 import '../../../resources/resources.dart';
 import '../../../widgets/widgets.dart';
 
 class InvoiceItem extends StatelessWidget {
   const InvoiceItem({
-    super.key,
-  });
+    Key? key,
+    required this.invoice,
+  }) : super(key: key);
+
+  final Invoice invoice;
 
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10.r),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
         color: context.colors.backgroundSecondary,
         child: Row(
           children: [
@@ -27,36 +33,36 @@ class InvoiceItem extends StatelessWidget {
                     color: const Color(0xFF7E88C3),
                   ),
                 ),
-                const Text(
-                  'RT3080',
+                Text(
+                  invoice.id,
                   style: AppTextStyles.hs3,
                 ),
               ],
             ),
             8.horizontalSpace,
-            const Expanded(
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Jensen Huang',
+                    invoice.clientName,
                     style: AppTextStyles.hs3,
                   ),
                   Text(
-                    'Due 19 Aug 2021',
+                    invoice.paymentDue.formatddMMMyyyy,
                     style: AppTextStyles.hs3,
                   ),
                 ],
               ),
             ),
             4.horizontalSpace,
-            const Text(
-              '1000',
+            Text(
+              '£ ${invoice.total.toStringAsFixed(2)}',
               style: AppTextStyles.hs3,
             ),
             18.horizontalSpace,
-            const InvoiceStatusButton(
-              invoiceStatusType: InvoiceStatusType.pending,
+            InvoiceStatusButton(
+              invoiceStatusType: invoice.invoiceStatus,
             ),
             8.horizontalSpace,
             Assets.icons.iconArrowRight.svg(height: 11.h),

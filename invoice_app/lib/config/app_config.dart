@@ -1,3 +1,4 @@
+import 'package:invoice_app/data/local/isar_db/isar_database.dart';
 import 'package:invoice_app/injection/di.dart';
 
 class AppConfig {
@@ -11,5 +12,6 @@ class AppConfig {
 
   Future<void> init() async {
     configureDependencies();
+    await getIt<IsarDatabase>().initIsarDataBase();
   }
 }
