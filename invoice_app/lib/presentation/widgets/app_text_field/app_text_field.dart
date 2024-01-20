@@ -20,6 +20,7 @@ class AppTextField extends StatefulWidget {
     this.height,
     this.width,
     this.isAutoDisposeController = true,
+    this.isReadOnly = false,
   }) : super(key: key);
 
   final FocusNode? focusNode;
@@ -36,6 +37,7 @@ class AppTextField extends StatefulWidget {
   final double? width;
 
   final bool isAutoDisposeController;
+  final bool isReadOnly;
 
   @override
   State<AppTextField> createState() => _AppTextFieldState();
@@ -82,12 +84,14 @@ class _AppTextFieldState extends State<AppTextField> {
           width: widget.width,
           decoration: BoxDecoration(
             color: context.colors.backgroundSecondary,
+            borderRadius: BorderRadius.circular(4.r),
           ),
           child: TextFormField(
             key: _textFieldKey,
             onChanged: (value) {
               widget.onTextChange?.call(value);
             },
+            readOnly: widget.isReadOnly,
             controller: _textController,
             onFieldSubmitted: widget.onSubmit,
             validator: widget.validator,
@@ -96,16 +100,22 @@ class _AppTextFieldState extends State<AppTextField> {
             keyboardType: widget.keyboardType,
             style: AppTextStyles.body1,
             decoration: InputDecoration(
+              fillColor: context.colors.backgroundPrimary,
+              filled: widget.isReadOnly,
               border: const OutlineInputBorder(),
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: context.colors.backgroundSecondary,
+                  color: widget.isReadOnly
+                      ? context.colors.backgroundPrimary
+                      : context.colors.backgroundSecondary,
                   width: 0.5,
                 ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: context.colors.backgroundSecondary,
+                  color: widget.isReadOnly
+                      ? context.colors.backgroundPrimary
+                      : context.colors.backgroundSecondary,
                   width: 0.5,
                 ),
               ),
