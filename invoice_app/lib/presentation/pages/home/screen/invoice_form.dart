@@ -19,22 +19,30 @@ class _InvoiceFormState extends State<InvoiceForm> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: context.colors.backgroundPrimary,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
-          child: Form(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _buildBillFrom(),
-                24.verticalSpace,
-                _buildBillTo(),
-                24.verticalSpace,
-                _buildItemList(),
-              ],
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
+        child: Column(
+          children: [
+            const Text('Create Invoice'),
+            24.verticalSpace,
+            Expanded(
+              child: SingleChildScrollView(
+                child: Form(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildBillFrom(),
+                      24.verticalSpace,
+                      _buildBillTo(),
+                      24.verticalSpace,
+                      _buildItemList(),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
