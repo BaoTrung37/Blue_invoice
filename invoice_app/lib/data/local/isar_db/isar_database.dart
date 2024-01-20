@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
 import 'package:invoice_app/data/local/isar_db/isar_database_repository.dart';
-import 'package:invoice_app/data/model/invoice_collection.dart';
+import 'package:invoice_app/data/model/invoice.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -15,7 +15,7 @@ class IsarDatabase implements IsarDatabaseRepository {
     final dir = await getApplicationDocumentsDirectory();
     isar = await Isar.open(
       [
-        InvoiceCollectionSchema,
+        InvoiceSchema,
       ],
       directory: dir.path,
     );
@@ -30,9 +30,9 @@ class IsarDatabase implements IsarDatabaseRepository {
 
     await isar.writeTxn(() async {
       for (final itemData in jsonData) {
-        final invoiceCollection = InvoiceCollection.fromJson(itemData);
+        final invoiceCollection = Invoice.fromJson(itemData);
 
-        await isar.invoiceCollections.put(invoiceCollection);
+        await isar.invoices.put(invoiceCollection);
       }
     });
   }
@@ -46,8 +46,8 @@ class IsarDatabase implements IsarDatabaseRepository {
   }
 
   @override
-  Future<List<InvoiceCollection>> getInvoices() async {
-    //
-    return [];
+  Future<List<Invoice>> getInvoices() async {
+    final invoices = await isar.invoices.where().findAll();
+    return invoices;
   }
 }

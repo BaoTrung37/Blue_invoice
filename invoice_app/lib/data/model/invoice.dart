@@ -4,14 +4,14 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:invoice_app/data/local/isar_db/isar_extension.dart';
 import 'package:isar/isar.dart';
 
-part 'invoice_collection.freezed.dart';
-part 'invoice_collection.g.dart';
+part 'invoice.freezed.dart';
+part 'invoice.g.dart';
 
 @freezed
 @collectionOnFreezed
-class InvoiceCollection with _$InvoiceCollection {
-  const InvoiceCollection._();
-  const factory InvoiceCollection({
+class Invoice with _$Invoice {
+  const Invoice._();
+  const factory Invoice({
     @Index(unique: true) required String id,
     required DateTime createdAt,
     required DateTime paymentDue,
@@ -28,8 +28,8 @@ class InvoiceCollection with _$InvoiceCollection {
 
   Id get invoiceId => Isar.autoIncrement;
 
-  factory InvoiceCollection.fromJson(Map<String, dynamic> json) =>
-      _$InvoiceCollectionFromJson(json);
+  factory Invoice.fromJson(Map<String, dynamic> json) =>
+      _$InvoiceFromJson(json);
 }
 
 @freezed
