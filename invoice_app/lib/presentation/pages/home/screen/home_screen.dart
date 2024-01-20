@@ -62,7 +62,16 @@ class _HomeScreenState extends State<HomeScreen> {
               style: AppTextStyles.h1,
             ),
             8.verticalSpace,
-            const Text('No Invoices'),
+            BlocBuilder<InvoiceControllerCubit, InvoiceControllerState>(
+              builder: (context, state) {
+                if (state.invoices.isNotEmpty) {
+                  return Text(
+                      'There are ${state.invoices.length} total invoices');
+                } else {
+                  return const Text('No Invoices');
+                }
+              },
+            ),
           ],
         ),
         Row(
@@ -123,15 +132,6 @@ class _MainContent extends StatelessWidget {
   }
 
   Widget _buildInvoiceList(InvoiceControllerState state) {
-    // return Column(
-    //   children: [
-    //     const InvoiceItem(),
-    //     24.verticalSpace,
-    //     const InvoiceItem(),
-    //     24.verticalSpace,
-    //     const InvoiceItem(),
-    //   ],
-    // );
     final invoices = state.invoices;
     return Expanded(
       child: ListView.separated(
