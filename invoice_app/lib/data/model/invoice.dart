@@ -30,6 +30,7 @@ class Invoice with _$Invoice {
 
   Id get invoiceId => Isar.autoIncrement;
 
+  @enumerated
   InvoiceStatusType get invoiceStatus =>
       InvoiceStatusType.values.firstWhereOrNull(
           (element) => element.name.toLowerCase() == status.toLowerCase()) ??
