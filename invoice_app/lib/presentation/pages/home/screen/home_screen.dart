@@ -90,11 +90,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildNewInvoiceButton(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        //
-        showBottomSheet(
+        showModalBottomSheet(
+          elevation: 2,
           context: context,
+          scrollControlDisabledMaxHeightRatio: 1,
           constraints: BoxConstraints(
-            maxHeight: MediaQuery.sizeOf(context).height * 0.6,
+            maxHeight: MediaQuery.sizeOf(context).height * 0.7,
           ),
           builder: (context) {
             return const InvoiceForm();
