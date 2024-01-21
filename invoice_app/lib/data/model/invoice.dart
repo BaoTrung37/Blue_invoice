@@ -1,5 +1,7 @@
 // ignore_for_file: invalid_annotation_target
 
+import 'dart:math';
+
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:invoice_app/data/local/isar_db/isar_extension.dart';
@@ -14,7 +16,6 @@ part 'invoice.g.dart';
 class Invoice with _$Invoice {
   const Invoice._();
   const factory Invoice({
-    @Index(unique: true) required String id,
     required DateTime createdAt,
     required DateTime paymentDue,
     required String description,
@@ -29,6 +30,26 @@ class Invoice with _$Invoice {
   }) = _InvoiceCollection;
 
   Id get invoiceId => Isar.autoIncrement;
+
+  @Index(unique: true)
+  String get id {
+    int randomUpperCase1 = Random().nextInt(26);
+    int randomUpperCase2 = Random().nextInt(26);
+
+    int randomNumber = Random().nextInt(10000);
+
+    String randomDigits = randomNumber.toString().padLeft(4, '0');
+
+    String randomUpperCase1Char =
+        String.fromCharCode('A'.codeUnitAt(0) + randomUpperCase1);
+    String randomUpperCase2Char =
+        String.fromCharCode('A'.codeUnitAt(0) + randomUpperCase2);
+
+    String randomString =
+        '$randomUpperCase1Char$randomUpperCase2Char$randomDigits';
+
+    return randomString;
+  }
 
   @enumerated
   InvoiceStatusType get invoiceStatus =>
@@ -57,12 +78,19 @@ class Address with _$Address {
 @freezed
 @Embedded(ignore: {'copyWith'})
 class Item with _$Item {
+  const Item._();
   const factory Item({
     String? name,
     int? quantity,
     double? price,
-    double? total,
   }) = _Item;
+
+  double? get total {
+    if (price != null && quantity != null) {
+      return price! * quantity!;
+    }
+    return null;
+  }
 
   factory Item.fromJson(Map<String, dynamic> json) => _$ItemFromJson(json);
 }
