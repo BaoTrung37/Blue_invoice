@@ -16,21 +16,23 @@ part 'invoice.g.dart';
 class Invoice with _$Invoice {
   const Invoice._();
   const factory Invoice({
-    required DateTime createdAt,
-    required DateTime paymentDue,
-    required String description,
-    required int paymentTerms,
-    required String clientName,
-    required String clientEmail,
-    required String status,
-    required Address senderAddress,
-    required Address clientAddress,
-    required List<Item> items,
-    required double total,
+    @Index(unique: true) @Default('') String id,
+    @Default('') String description,
+    @Default('') String clientName,
+    @Default('') String clientEmail,
+    @Default('') String status,
+    @Default(Address()) Address senderAddress,
+    @Default(Address()) Address clientAddress,
+    @Default(0) int paymentTerms,
+    @Default(0) double total,
+    DateTime? createdAt,
+    DateTime? paymentDue,
+    @Default([]) List<Item> items,
   }) = _InvoiceCollection;
 
   Id get invoiceId => Isar.autoIncrement;
 
+  @override
   @Index(unique: true)
   String get id {
     int randomUpperCase1 = Random().nextInt(26);

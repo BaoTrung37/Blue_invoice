@@ -49,7 +49,7 @@ class InvoiceItem extends StatelessWidget {
                     style: AppTextStyles.hs3,
                   ),
                   Text(
-                    invoice.paymentDue.formatddMMMyyyy,
+                    invoice.paymentDue?.formatddMMMyyyy ?? '',
                     style: AppTextStyles.hs3,
                   ),
                 ],

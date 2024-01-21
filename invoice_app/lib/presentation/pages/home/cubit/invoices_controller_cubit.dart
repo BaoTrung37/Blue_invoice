@@ -3,9 +3,8 @@ import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:invoice_app/data/model/invoice.dart';
-import 'package:invoice_app/domain/use_cases/invoices/get_all_invoices_use_case.dart';
-
-import '../../../widgets/enums/loading_status.dart';
+import 'package:invoice_app/domain/use_cases/invoices/invoices.dart';
+import 'package:invoice_app/presentation/presentation.dart';
 
 part 'invoices_controller_cubit.freezed.dart';
 part 'invoices_controller_state.dart';
@@ -14,9 +13,11 @@ part 'invoices_controller_state.dart';
 class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
   InvoicesControllerCubit(
     this.getAllInvoicesUseCase,
+    this.addNewInvoiceUseCase,
   ) : super(const InvoicesControllerState());
 
   final GetAllInvoicesUseCase getAllInvoicesUseCase;
+  final AddNewInvoiceUseCase addNewInvoiceUseCase;
 
   Future<void> initData() async {
     try {
@@ -33,13 +34,44 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
     }
   }
 
+  Future<bool> addInvoiceToDb() async {
+    try {
+      final currentInvoice = state.currentInvoice.copyWith(
+        status: InvoiceStatusType.daft.name,
+      );
+
+      final isAddSuccess = await addNewInvoiceUseCase.run(currentInvoice);
+      if (isAddSuccess) {
+        emit(
+          state.copyWith(
+            currentInvoice: currentInvoice,
+          ),
+        );
+        refreshTemplateData();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      //
+    }
+    return false;
+  }
+
+  Future<void> refreshTemplateData() async {
+    await initData();
+    emit(
+      state.copyWith(
+        currentInvoice: const Invoice(),
+      ),
+    );
+  }
+
   Future<void> changedBillFromAddress(String stressAddress) async {
-    final senderAddress =
-        state.templateInvoice?.senderAddress ?? const Address();
+    final senderAddress = state.currentInvoice.senderAddress;
 
     emit(
       state.copyWith(
-        templateInvoice: state.templateInvoice?.copyWith(
+        currentInvoice: state.currentInvoice.copyWith(
           senderAddress: senderAddress.copyWith(street: stressAddress),
         ),
       ),
@@ -47,12 +79,11 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
   }
 
   Future<void> changedBillFromCity(String city) async {
-    final senderAddress =
-        state.templateInvoice?.senderAddress ?? const Address();
+    final senderAddress = state.currentInvoice.senderAddress;
 
     emit(
       state.copyWith(
-        templateInvoice: state.templateInvoice?.copyWith(
+        currentInvoice: state.currentInvoice.copyWith(
           senderAddress: senderAddress.copyWith(city: city),
         ),
       ),
@@ -60,12 +91,11 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
   }
 
   Future<void> changedBillFormPostCode(String postCode) async {
-    final senderAddress =
-        state.templateInvoice?.senderAddress ?? const Address();
+    final senderAddress = state.currentInvoice.senderAddress;
 
     emit(
       state.copyWith(
-        templateInvoice: state.templateInvoice?.copyWith(
+        currentInvoice: state.currentInvoice.copyWith(
           senderAddress: senderAddress.copyWith(postCode: postCode),
         ),
       ),
@@ -73,12 +103,11 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
   }
 
   Future<void> changedBillFormCountry(String country) async {
-    final senderAddress =
-        state.templateInvoice?.senderAddress ?? const Address();
+    final senderAddress = state.currentInvoice.senderAddress;
 
     emit(
       state.copyWith(
-        templateInvoice: state.templateInvoice?.copyWith(
+        currentInvoice: state.currentInvoice.copyWith(
           senderAddress: senderAddress.copyWith(country: country),
         ),
       ),
@@ -86,12 +115,11 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
   }
 
   Future<void> changedBillToAddress(String stressAddress) async {
-    final clientAddress =
-        state.templateInvoice?.clientAddress ?? const Address();
+    final clientAddress = state.currentInvoice.clientAddress;
 
     emit(
       state.copyWith(
-        templateInvoice: state.templateInvoice?.copyWith(
+        currentInvoice: state.currentInvoice.copyWith(
           clientAddress: clientAddress.copyWith(street: stressAddress),
         ),
       ),
@@ -99,12 +127,11 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
   }
 
   Future<void> changedBillToCity(String city) async {
-    final clientAddress =
-        state.templateInvoice?.clientAddress ?? const Address();
+    final clientAddress = state.currentInvoice.clientAddress;
 
     emit(
       state.copyWith(
-        templateInvoice: state.templateInvoice?.copyWith(
+        currentInvoice: state.currentInvoice.copyWith(
           clientAddress: clientAddress.copyWith(city: city),
         ),
       ),
@@ -112,12 +139,11 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
   }
 
   Future<void> changedBillToPostCode(String postCode) async {
-    final clientAddress =
-        state.templateInvoice?.clientAddress ?? const Address();
+    final clientAddress = state.currentInvoice.clientAddress;
 
     emit(
       state.copyWith(
-        templateInvoice: state.templateInvoice?.copyWith(
+        currentInvoice: state.currentInvoice.copyWith(
           clientAddress: clientAddress.copyWith(postCode: postCode),
         ),
       ),
@@ -125,12 +151,11 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
   }
 
   Future<void> changedBillToCountry(String country) async {
-    final clientAddress =
-        state.templateInvoice?.clientAddress ?? const Address();
+    final clientAddress = state.currentInvoice.clientAddress;
 
     emit(
       state.copyWith(
-        templateInvoice: state.templateInvoice?.copyWith(
+        currentInvoice: state.currentInvoice.copyWith(
           clientAddress: clientAddress.copyWith(country: country),
         ),
       ),
@@ -140,7 +165,7 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
   Future<void> changedBillToClientName(String clientName) async {
     emit(
       state.copyWith(
-        templateInvoice: state.templateInvoice?.copyWith(
+        currentInvoice: state.currentInvoice.copyWith(
           clientName: clientName,
         ),
       ),
@@ -150,7 +175,7 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
   Future<void> changedBillToClientEmail(String clientEmail) async {
     emit(
       state.copyWith(
-        templateInvoice: state.templateInvoice?.copyWith(
+        currentInvoice: state.currentInvoice.copyWith(
           clientEmail: clientEmail,
         ),
       ),
@@ -161,7 +186,7 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
       String projectDescription) async {
     emit(
       state.copyWith(
-        templateInvoice: state.templateInvoice?.copyWith(
+        currentInvoice: state.currentInvoice.copyWith(
           description: projectDescription,
         ),
       ),

@@ -5,7 +5,6 @@ class InvoicesControllerState with _$InvoicesControllerState {
   const factory InvoicesControllerState({
     @Default(LoadingStatus.initial) LoadingStatus loadingStatus,
     @Default([]) List<Invoice> invoices,
-    Invoice? currentInvoice,
-    Invoice? templateInvoice,
+    @Default(Invoice()) Invoice currentInvoice,
   }) = _InvoicesControllerState;
 }
