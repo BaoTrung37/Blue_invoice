@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:invoice_app/gen/assets.gen.dart';
 import 'package:invoice_app/injection/di.dart';
-import 'package:invoice_app/presentation/pages/home/cubit/invoice_controller_cubit.dart';
+import 'package:invoice_app/presentation/pages/home/cubit/invoices_controller_cubit.dart';
 import 'package:invoice_app/presentation/pages/home/screen/invoice_form.dart';
 import 'package:invoice_app/presentation/resources/app_colors.dart';
 import 'package:invoice_app/presentation/resources/app_text_styles.dart';
@@ -24,13 +24,13 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     // getIt.get<IsarDatabase>().importJson();
-    getIt.get<InvoiceControllerCubit>().initData();
+    getIt.get<InvoicesControllerCubit>().initData();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => getIt.get<InvoiceControllerCubit>(),
+      create: (context) => getIt.get<InvoicesControllerCubit>(),
       child: Scaffold(
         backgroundColor: context.colors.backgroundPrimary,
         body: SafeArea(
@@ -62,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
               style: AppTextStyles.h1,
             ),
             8.verticalSpace,
-            BlocBuilder<InvoiceControllerCubit, InvoiceControllerState>(
+            BlocBuilder<InvoicesControllerCubit, InvoicesControllerState>(
               builder: (context, state) {
                 if (state.invoices.isNotEmpty) {
                   return Text(
@@ -135,7 +135,7 @@ class _MainContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<InvoiceControllerCubit, InvoiceControllerState>(
+    return BlocBuilder<InvoicesControllerCubit, InvoicesControllerState>(
       builder: (context, state) {
         if (state.invoices.isNotEmpty) {
           return _buildInvoiceList(state);
@@ -146,7 +146,7 @@ class _MainContent extends StatelessWidget {
     );
   }
 
-  Widget _buildInvoiceList(InvoiceControllerState state) {
+  Widget _buildInvoiceList(InvoicesControllerState state) {
     final invoices = state.invoices;
     return Expanded(
       child: ListView.separated(
