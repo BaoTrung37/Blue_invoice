@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:invoice_app/presentation/pages/home/widgets/custom_button.dart';
 import 'package:invoice_app/presentation/resources/app_colors.dart';
 import 'package:invoice_app/presentation/resources/app_text_styles.dart';
 import 'package:invoice_app/presentation/widgets/app_text_field/app_text_field.dart';
@@ -19,31 +20,98 @@ class _InvoiceFormState extends State<InvoiceForm> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: context.colors.backgroundPrimary,
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
-        child: Column(
-          children: [
-            const Text('Create Invoice'),
-            24.verticalSpace,
-            Expanded(
-              child: SingleChildScrollView(
-                child: Form(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      _buildBillFrom(),
-                      24.verticalSpace,
-                      _buildBillTo(),
-                      24.verticalSpace,
-                      _buildItemList(),
-                    ],
-                  ),
+      body: const _MainContent(),
+      bottomNavigationBar: const _BottomNavigationBar(),
+    );
+  }
+}
+
+class _BottomNavigationBar extends StatelessWidget {
+  const _BottomNavigationBar();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(bottom: 16.h),
+      height: 60.h,
+      width: double.infinity,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          CustomButton(
+            backgroundColor: const Color(0xFFF9FAFE),
+            onTap: () {
+              //
+            },
+            child: Text(
+              'Discard',
+              style: AppTextStyles.body1.copyWith(
+                color: const Color(0xFF828DC5),
+              ),
+            ),
+          ),
+          CustomButton(
+            onTap: () {
+              //
+            },
+            backgroundColor: const Color(0xFF373B54),
+            child: Text(
+              'Save as Daft',
+              style: AppTextStyles.body1.copyWith(
+                color: const Color(0xFFDEE3F9),
+              ),
+            ),
+          ),
+          CustomButton(
+            onTap: () {
+              //
+            },
+            backgroundColor: const Color(0xFF7C5DF9),
+            child: Text(
+              'Save & Send',
+              style: AppTextStyles.body1.copyWith(
+                color: const Color(0xFFFEFEFF),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MainContent extends StatelessWidget {
+  const _MainContent();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
+      child: Column(
+        children: [
+          const Text(
+            'Create Invoice',
+            style: AppTextStyles.h2,
+          ),
+          24.verticalSpace,
+          Expanded(
+            child: SingleChildScrollView(
+              child: Form(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildBillFrom(),
+                    24.verticalSpace,
+                    _buildBillTo(),
+                    24.verticalSpace,
+                    _buildItemList(context),
+                  ],
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -148,7 +216,7 @@ class _InvoiceFormState extends State<InvoiceForm> {
     );
   }
 
-  Widget _buildItemList() {
+  Widget _buildItemList(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -217,25 +285,18 @@ class _InvoiceFormState extends State<InvoiceForm> {
           ],
         ),
         24.verticalSpace,
-        GestureDetector(
+        CustomButton(
           onTap: () {
-            // TODO: Implement add new item
+            //
           },
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 16.h),
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: context.colors.backgroundSecondary,
-              borderRadius: BorderRadius.circular(20.r),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Assets.icons.iconPlus.svg(),
-                4.horizontalSpace,
-                const Text('Add New Item'),
-              ],
-            ),
+          backgroundColor: context.colors.backgroundSecondary,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Assets.icons.iconPlus.svg(),
+              4.horizontalSpace,
+              const Text('Add New Item'),
+            ],
           ),
         ),
       ],
