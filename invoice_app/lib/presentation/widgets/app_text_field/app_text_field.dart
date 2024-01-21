@@ -86,41 +86,44 @@ class _AppTextFieldState extends State<AppTextField> {
             color: context.colors.backgroundSecondary,
             borderRadius: BorderRadius.circular(4.r),
           ),
-          child: TextFormField(
-            key: _textFieldKey,
-            onChanged: (value) {
-              widget.onTextChange?.call(value);
-            },
-            readOnly: widget.isReadOnly,
-            controller: _textController,
-            onFieldSubmitted: widget.onSubmit,
-            validator: widget.validator,
-            focusNode: _focusNode,
-            textInputAction: widget.textInputAction,
-            keyboardType: widget.keyboardType,
-            style: AppTextStyles.body1,
-            decoration: InputDecoration(
-              fillColor: context.colors.backgroundPrimary,
-              filled: widget.isReadOnly,
-              border: const OutlineInputBorder(),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: widget.isReadOnly
-                      ? context.colors.backgroundPrimary
-                      : context.colors.backgroundSecondary,
-                  width: 0.5,
+          child: Focus(
+            onFocusChange: (focus) {},
+            child: TextFormField(
+              key: _textFieldKey,
+              onChanged: (value) {
+                widget.onTextChange?.call(value);
+              },
+              readOnly: widget.isReadOnly,
+              controller: _textController,
+              onFieldSubmitted: widget.onSubmit,
+              validator: widget.validator,
+              focusNode: _focusNode,
+              textInputAction: widget.textInputAction,
+              keyboardType: widget.keyboardType,
+              style: AppTextStyles.body1,
+              decoration: InputDecoration(
+                fillColor: context.colors.backgroundPrimary,
+                filled: widget.isReadOnly,
+                border: const OutlineInputBorder(),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: widget.isReadOnly
+                        ? context.colors.backgroundPrimary
+                        : context.colors.backgroundSecondary,
+                    width: 0.5,
+                  ),
                 ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: widget.isReadOnly
-                      ? context.colors.backgroundPrimary
-                      : context.colors.backgroundSecondary,
-                  width: 0.5,
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: widget.isReadOnly
+                        ? context.colors.backgroundPrimary
+                        : context.colors.backgroundSecondary,
+                    width: 0.5,
+                  ),
                 ),
+                errorBorder: InputBorder.none,
+                isDense: true,
               ),
-              errorBorder: InputBorder.none,
-              isDense: true,
             ),
           ),
         ),
