@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:invoice_app/gen/assets.gen.dart';
 import 'package:invoice_app/injection/di.dart';
 import 'package:invoice_app/presentation/pages/home/cubit/invoice_controller_cubit.dart';
+import 'package:invoice_app/presentation/pages/home/screen/invoice_form.dart';
 import 'package:invoice_app/presentation/resources/app_colors.dart';
 import 'package:invoice_app/presentation/resources/app_text_styles.dart';
 
@@ -23,7 +24,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     // getIt.get<IsarDatabase>().importJson();
-
     getIt.get<InvoiceControllerCubit>().initData();
   }
 
@@ -62,7 +62,16 @@ class _HomeScreenState extends State<HomeScreen> {
               style: AppTextStyles.h1,
             ),
             8.verticalSpace,
-            const Text('No Invoices'),
+            BlocBuilder<InvoiceControllerCubit, InvoiceControllerState>(
+              builder: (context, state) {
+                if (state.invoices.isNotEmpty) {
+                  return Text(
+                      'There are ${state.invoices.length} total invoices');
+                } else {
+                  return const Text('No Invoices');
+                }
+              },
+            ),
           ],
         ),
         Row(
@@ -79,28 +88,43 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildNewInvoiceButton(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: context.colors.button1Color,
-        borderRadius: BorderRadius.circular(20.r),
-      ),
-      padding: EdgeInsets.all(6.r),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CircleAvatar(
-            radius: 15.r,
-            backgroundColor: context.colors.lightBackground,
-            child: Assets.icons.iconPlus.svg(),
+    return GestureDetector(
+      onTap: () {
+        showModalBottomSheet(
+          elevation: 2,
+          context: context,
+          scrollControlDisabledMaxHeightRatio: 1,
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.sizeOf(context).height * 0.7,
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.w),
-            child: const Text(
-              'New Invoice',
-              style: AppTextStyles.body1,
+          builder: (context) {
+            return const InvoiceForm();
+          },
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: context.colors.button1Color,
+          borderRadius: BorderRadius.circular(20.r),
+        ),
+        padding: EdgeInsets.all(6.r),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircleAvatar(
+              radius: 15.r,
+              backgroundColor: context.colors.lightBackground,
+              child: Assets.icons.iconPlus.svg(),
             ),
-          ),
-        ],
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.w),
+              child: const Text(
+                'New Invoice',
+                style: AppTextStyles.body1,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -123,15 +147,6 @@ class _MainContent extends StatelessWidget {
   }
 
   Widget _buildInvoiceList(InvoiceControllerState state) {
-    // return Column(
-    //   children: [
-    //     const InvoiceItem(),
-    //     24.verticalSpace,
-    //     const InvoiceItem(),
-    //     24.verticalSpace,
-    //     const InvoiceItem(),
-    //   ],
-    // );
     final invoices = state.invoices;
     return Expanded(
       child: ListView.separated(

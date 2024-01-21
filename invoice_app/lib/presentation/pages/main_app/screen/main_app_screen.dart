@@ -23,7 +23,7 @@ class _BottomBarView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 90.h,
+      height: 70.h,
       width: double.infinity,
       decoration: BoxDecoration(
         color: context.colors.backgroundSecondary,
@@ -61,8 +61,8 @@ class _BottomBarView extends StatelessWidget {
 
   Widget _buildAppLogo() {
     return SizedBox(
-      height: 90.r,
-      width: 90.r,
+      height: 70.r,
+      width: 70.r,
       child: ClipRRect(
         borderRadius: BorderRadius.only(
           topRight: Radius.circular(20.r),
@@ -79,8 +79,8 @@ class _BottomBarView extends StatelessWidget {
             Positioned(
               bottom: 0,
               child: Container(
-                height: 45.r,
-                width: 90.r,
+                height: 35.r,
+                width: 70.r,
                 decoration: BoxDecoration(
                   color: const Color(0xFF9277FF),
                   borderRadius: BorderRadius.only(
@@ -92,7 +92,7 @@ class _BottomBarView extends StatelessWidget {
             Positioned.fill(
               child: Center(
                 child: Container(
-                  child: Assets.icons.logo.svg(height: 40.h),
+                  child: Assets.icons.logo.svg(height: 28.h),
                 ),
               ),
             ),
