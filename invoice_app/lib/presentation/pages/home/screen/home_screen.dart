@@ -167,6 +167,9 @@ class _MainContent extends StatelessWidget {
               //   ),
               //   builder: (context) => const InvoiceForm(),
               // );
+              getIt
+                  .get<InvoicesControllerCubit>()
+                  .setCurrentInvoice(invoices[index]);
               context.pushRoute(const InvoiceDetailRoute());
             },
           );
