@@ -59,11 +59,9 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
 
   Future<void> refreshTemplateData() async {
     await initData();
-    emit(
-      state.copyWith(
-        currentInvoice: const Invoice(),
-      ),
-    );
+    emit(state.copyWith(
+      currentInvoice: const Invoice(),
+    ));
   }
 
   Future<void> changedBillFromAddress(String stressAddress) async {

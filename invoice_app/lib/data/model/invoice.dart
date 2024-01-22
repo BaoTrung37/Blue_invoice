@@ -1,7 +1,5 @@
 // ignore_for_file: invalid_annotation_target
 
-import 'dart:math';
-
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:invoice_app/data/local/isar_db/isar_extension.dart';
@@ -32,26 +30,26 @@ class Invoice with _$Invoice {
 
   Id get invoiceId => Isar.autoIncrement;
 
-  @override
-  @Index(unique: true)
-  String get id {
-    int randomUpperCase1 = Random().nextInt(26);
-    int randomUpperCase2 = Random().nextInt(26);
+  // @override
+  // @Index(unique: true)
+  // String get id {
+  //   int randomUpperCase1 = Random().nextInt(26);
+  //   int randomUpperCase2 = Random().nextInt(26);
 
-    int randomNumber = Random().nextInt(10000);
+  //   int randomNumber = Random().nextInt(10000);
 
-    String randomDigits = randomNumber.toString().padLeft(4, '0');
+  //   String randomDigits = randomNumber.toString().padLeft(4, '0');
 
-    String randomUpperCase1Char =
-        String.fromCharCode('A'.codeUnitAt(0) + randomUpperCase1);
-    String randomUpperCase2Char =
-        String.fromCharCode('A'.codeUnitAt(0) + randomUpperCase2);
+  //   String randomUpperCase1Char =
+  //       String.fromCharCode('A'.codeUnitAt(0) + randomUpperCase1);
+  //   String randomUpperCase2Char =
+  //       String.fromCharCode('A'.codeUnitAt(0) + randomUpperCase2);
 
-    String randomString =
-        '$randomUpperCase1Char$randomUpperCase2Char$randomDigits';
+  //   String randomString =
+  //       '$randomUpperCase1Char$randomUpperCase2Char$randomDigits';
 
-    return randomString;
-  }
+  //   return randomString;
+  // }
 
   @enumerated
   InvoiceStatusType get invoiceStatus =>

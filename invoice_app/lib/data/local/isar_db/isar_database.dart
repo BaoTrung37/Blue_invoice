@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
@@ -54,6 +55,8 @@ class IsarDatabase implements IsarDatabaseRepository {
   @override
   Future<bool> addNewInvoice(Invoice invoice) async {
     return await isar.writeTxn(() async {
+      final id = invoice.id.isEmpty ? _randomId : invoice.id;
+      invoice = invoice.copyWith(id: id);
       await isar.invoices.put(invoice);
       return true;
     });
@@ -66,5 +69,24 @@ class IsarDatabase implements IsarDatabaseRepository {
       await isar.invoices.delete(id);
       return true;
     });
+  }
+
+  String get _randomId {
+    int randomUpperCase1 = Random().nextInt(26);
+    int randomUpperCase2 = Random().nextInt(26);
+
+    int randomNumber = Random().nextInt(10000);
+
+    String randomDigits = randomNumber.toString().padLeft(4, '0');
+
+    String randomUpperCase1Char =
+        String.fromCharCode('A'.codeUnitAt(0) + randomUpperCase1);
+    String randomUpperCase2Char =
+        String.fromCharCode('A'.codeUnitAt(0) + randomUpperCase2);
+
+    String randomString =
+        '$randomUpperCase1Char$randomUpperCase2Char$randomDigits';
+
+    return randomString;
   }
 }
