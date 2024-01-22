@@ -1,4 +1,4 @@
-extension StringExtension on String {
+extension StringExtension1 on String {
   int? get parseToInt {
     try {
       return int.parse(this);

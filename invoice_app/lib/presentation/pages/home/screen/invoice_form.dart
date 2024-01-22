@@ -4,10 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:invoice_app/injection/di.dart';
 import 'package:invoice_app/presentation/pages/home/cubit/invoices_controller_cubit.dart';
-import 'package:invoice_app/presentation/pages/home/widgets/custom_button.dart';
+import 'package:invoice_app/presentation/pages/home/screen/views/invoice_bottom_bar.dart';
+import 'package:invoice_app/presentation/pages/home/screen/views/payment_due_to_time_view.dart';
+import 'package:invoice_app/presentation/presentation.dart';
 import 'package:invoice_app/presentation/resources/app_colors.dart';
 import 'package:invoice_app/presentation/resources/app_text_styles.dart';
-import 'package:invoice_app/presentation/widgets/app_text_field/app_text_field.dart';
 
 import 'views/item_list_view.dart';
 
@@ -32,7 +33,7 @@ class _InvoiceFormState extends State<InvoiceForm> {
       resizeToAvoidBottomInset: false,
       backgroundColor: context.colors.backgroundPrimary,
       body: _MainContent(keyForm: _keyForm),
-      bottomNavigationBar: const _BottomNavigationBar(),
+      bottomNavigationBar: const InvoiceBottomBar(),
     );
   }
 }
@@ -217,21 +218,7 @@ class _MainContent extends StatelessWidget {
               ],
             ),
             16.verticalSpace,
-            Row(
-              children: [
-                const Expanded(
-                  child: AppTextField(
-                    title: 'Issue Date',
-                  ),
-                ),
-                16.horizontalSpace,
-                const Expanded(
-                  child: AppTextField(
-                    title: 'Payment Terms',
-                  ),
-                ),
-              ],
-            ),
+            const PaymentDueToTimeView(),
             16.verticalSpace,
             AppTextField(
               title: 'Project Description',
@@ -244,64 +231,6 @@ class _MainContent extends StatelessWidget {
           ],
         );
       },
-    );
-  }
-
-  Widget _buildItemList(BuildContext context) {
-    return const ItemListView();
-  }
-}
-
-class _BottomNavigationBar extends StatelessWidget {
-  const _BottomNavigationBar();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(bottom: 16.h),
-      height: 60.h,
-      width: double.infinity,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          CustomButton(
-            backgroundColor: const Color(0xFFF9FAFE),
-            onTap: () {},
-            child: Text(
-              'Discard',
-              style: AppTextStyles.body1.copyWith(
-                color: const Color(0xFF828DC5),
-              ),
-            ),
-          ),
-          CustomButton(
-            onTap: () {
-              getIt.get<InvoicesControllerCubit>().addInvoiceToDb().then(
-                    (value) => Navigator.of(context).pop(),
-                  );
-            },
-            backgroundColor: const Color(0xFF373B54),
-            child: Text(
-              'Save as Daft',
-              style: AppTextStyles.body1.copyWith(
-                color: const Color(0xFFDEE3F9),
-              ),
-            ),
-          ),
-          CustomButton(
-            onTap: () {
-              //
-            },
-            backgroundColor: const Color(0xFF7C5DF9),
-            child: Text(
-              'Save & Send',
-              style: AppTextStyles.body1.copyWith(
-                color: const Color(0xFFFEFEFF),
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

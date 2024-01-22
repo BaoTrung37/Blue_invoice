@@ -188,6 +188,26 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
     );
   }
 
+  Future<void> changedBillToClientCreateAt(DateTime createAt) async {
+    emit(
+      state.copyWith(
+        currentInvoice: state.currentInvoice.copyWith(
+          createdAt: createAt,
+        ),
+      ),
+    );
+  }
+
+  Future<void> changedBillToClientPaymentTerm(int paymentTerms) async {
+    emit(
+      state.copyWith(
+        currentInvoice: state.currentInvoice.copyWith(
+          paymentTerms: paymentTerms,
+        ),
+      ),
+    );
+  }
+
   Future<void> changedBillToClientProjectDescription(
       String projectDescription) async {
     emit(

@@ -21,35 +21,20 @@ class Invoice with _$Invoice {
     @Default('') String status,
     @Default(Address()) Address senderAddress,
     @Default(Address()) Address clientAddress,
-    @Default(0) int paymentTerms,
+    @Default(1) int paymentTerms,
     @Default(0) double total,
     DateTime? createdAt,
-    DateTime? paymentDue,
     @Default([]) List<Item> items,
   }) = _InvoiceCollection;
 
   Id get invoiceId => Isar.autoIncrement;
 
-  // @override
-  // @Index(unique: true)
-  // String get id {
-  //   int randomUpperCase1 = Random().nextInt(26);
-  //   int randomUpperCase2 = Random().nextInt(26);
+  @Index()
+  DateTime? get paymentDue => createdAt?.add(Duration(days: paymentTerms));
 
-  //   int randomNumber = Random().nextInt(10000);
-
-  //   String randomDigits = randomNumber.toString().padLeft(4, '0');
-
-  //   String randomUpperCase1Char =
-  //       String.fromCharCode('A'.codeUnitAt(0) + randomUpperCase1);
-  //   String randomUpperCase2Char =
-  //       String.fromCharCode('A'.codeUnitAt(0) + randomUpperCase2);
-
-  //   String randomString =
-  //       '$randomUpperCase1Char$randomUpperCase2Char$randomDigits';
-
-  //   return randomString;
-  // }
+  // @ignore
+  // PaymentTermsType? get paymentTermsType => PaymentTermsType.values
+  //     .firstWhereOrNull((element) => element.timePlus == paymentTerms);
 
   @enumerated
   InvoiceStatusType get invoiceStatus =>
