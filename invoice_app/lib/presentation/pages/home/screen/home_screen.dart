@@ -148,6 +148,7 @@ class _MainContent extends StatelessWidget {
     final invoices = state.invoices;
     return Expanded(
       child: ListView.separated(
+        reverse: true,
         shrinkWrap: true,
         itemBuilder: (context, index) {
           return InvoiceItem(
