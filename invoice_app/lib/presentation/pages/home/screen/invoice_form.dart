@@ -9,7 +9,7 @@ import 'package:invoice_app/presentation/resources/app_colors.dart';
 import 'package:invoice_app/presentation/resources/app_text_styles.dart';
 import 'package:invoice_app/presentation/widgets/app_text_field/app_text_field.dart';
 
-import '../../../../gen/assets.gen.dart';
+import 'views/item_list_view.dart';
 
 class InvoiceForm extends StatefulWidget {
   const InvoiceForm({super.key});
@@ -72,7 +72,7 @@ class _MainContent extends StatelessWidget {
                       24.verticalSpace,
                       _buildBillTo(),
                       24.verticalSpace,
-                      _buildItemList(context),
+                      const ItemListView(),
                     ],
                   ),
                 ),
@@ -248,90 +248,7 @@ class _MainContent extends StatelessWidget {
   }
 
   Widget _buildItemList(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const Text('Item List', style: AppTextStyles.h2),
-        16.verticalSpace,
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Expanded(
-              flex: 6,
-              child: Text('Item Name'),
-            ),
-            8.horizontalSpace,
-            const Expanded(
-              flex: 2,
-              child: Text('Qty.'),
-            ),
-            8.horizontalSpace,
-            const Expanded(
-              flex: 3,
-              child: Text('Price'),
-            ),
-            8.horizontalSpace,
-            const Expanded(
-              flex: 3,
-              child: Text('Total'),
-            ),
-            8.horizontalSpace,
-            const Expanded(
-              flex: 1,
-              child: SizedBox.shrink(),
-            ),
-          ],
-        ),
-        8.verticalSpace,
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Expanded(
-              flex: 6,
-              child: AppTextField(),
-            ),
-            8.horizontalSpace,
-            const Expanded(
-              flex: 2,
-              child: AppTextField(),
-            ),
-            8.horizontalSpace,
-            const Expanded(
-              flex: 3,
-              child: AppTextField(),
-            ),
-            8.horizontalSpace,
-            const Expanded(
-              flex: 3,
-              child: AppTextField(
-                isReadOnly: true,
-              ),
-            ),
-            8.horizontalSpace,
-            Expanded(
-              flex: 1,
-              child: Assets.icons.iconDelete.svg(),
-            ),
-          ],
-        ),
-        24.verticalSpace,
-        CustomButton(
-          onTap: () {
-            //
-          },
-          backgroundColor: context.colors.backgroundSecondary,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Assets.icons.iconPlus.svg(),
-              4.horizontalSpace,
-              const Text('Add New Item'),
-            ],
-          ),
-        ),
-      ],
-    );
+    return const ItemListView();
   }
 }
 

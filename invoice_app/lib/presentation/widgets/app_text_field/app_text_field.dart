@@ -14,6 +14,7 @@ class AppTextField extends StatefulWidget {
     this.validator,
     this.onTextChange,
     this.onSubmit,
+    this.onFinishTextChanged,
     this.keyboardType,
     this.textInputAction,
     this.title,
@@ -30,6 +31,7 @@ class AppTextField extends StatefulWidget {
   final FormFieldValidator<String>? validator;
   final ValueChanged<String?>? onTextChange;
   final ValueChanged<String?>? onSubmit;
+  final ValueChanged<String?>? onFinishTextChanged;
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
   final String? title;
@@ -87,7 +89,11 @@ class _AppTextFieldState extends State<AppTextField> {
             borderRadius: BorderRadius.circular(4.r),
           ),
           child: Focus(
-            onFocusChange: (focus) {},
+            onFocusChange: (focus) {
+              if (!focus) {
+                widget.onFinishTextChanged?.call(_textController.text);
+              }
+            },
             child: TextFormField(
               key: _textFieldKey,
               onChanged: (value) {

@@ -34,6 +34,10 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
     }
   }
 
+  void setCurrentInvoice(Invoice invoice) {
+    emit(state.copyWith(currentInvoice: invoice));
+  }
+
   Future<bool> addInvoiceToDb() async {
     try {
       final currentInvoice = state.currentInvoice.copyWith(
@@ -59,6 +63,10 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
 
   Future<void> refreshTemplateData() async {
     await initData();
+    clearTemplateData();
+  }
+
+  void clearTemplateData() {
     emit(state.copyWith(
       currentInvoice: const Invoice(),
     ));
@@ -189,5 +197,103 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
         ),
       ),
     );
+  }
+
+  Future<void> addNewItem() async {
+    final items = state.currentInvoice.items.toList();
+    items.add(const Item());
+    emit(
+      state.copyWith(
+        currentInvoice: state.currentInvoice.copyWith(
+          items: items,
+        ),
+      ),
+    );
+  }
+
+  Future<void> removeItem(int index) async {
+    final items = state.currentInvoice.items.toList();
+    items.removeAt(index);
+    emit(
+      state.copyWith(
+        currentInvoice: state.currentInvoice.copyWith(
+          items: items,
+        ),
+      ),
+    );
+  }
+
+  Future<void> updateItemName({
+    required int index,
+    required String itemName,
+  }) async {
+    var currentItem = state.currentInvoice.items[index];
+
+    var updatedItem = currentItem.copyWith(
+      name: itemName,
+    );
+
+    if (currentItem != updatedItem) {
+      var items = List.of(state.currentInvoice.items);
+      items[index] = updatedItem;
+
+      emit(
+        state.copyWith(
+          currentInvoice: state.currentInvoice.copyWith(
+            items: items,
+          ),
+        ),
+      );
+    }
+  }
+
+  Future<void> updateItemQuantity({
+    required int index,
+    required String quantityStr,
+  }) async {
+    var currentItem = state.currentInvoice.items[index];
+
+    final quantity = quantityStr.parseToInt;
+    var updatedItem = currentItem.copyWith(
+      quantity: quantity,
+    );
+
+    if (currentItem != updatedItem) {
+      var items = List.of(state.currentInvoice.items);
+      items[index] = updatedItem;
+
+      emit(
+        state.copyWith(
+          currentInvoice: state.currentInvoice.copyWith(
+            items: items,
+          ),
+        ),
+      );
+    }
+  }
+
+  Future<void> updateItemPrice({
+    required int index,
+    required String priceStr,
+  }) async {
+    var currentItem = state.currentInvoice.items[index];
+
+    final price = priceStr.parseToDouble;
+    var updatedItem = currentItem.copyWith(
+      price: price,
+    );
+
+    if (currentItem != updatedItem) {
+      var items = List.of(state.currentInvoice.items);
+      items[index] = updatedItem;
+
+      emit(
+        state.copyWith(
+          currentInvoice: state.currentInvoice.copyWith(
+            items: items,
+          ),
+        ),
+      );
+    }
   }
 }

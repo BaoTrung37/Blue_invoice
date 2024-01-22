@@ -90,6 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildNewInvoiceButton(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        getIt.get<InvoicesControllerCubit>().clearTemplateData();
         showModalBottomSheet(
           elevation: 2,
           context: context,
@@ -97,9 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
           constraints: BoxConstraints(
             maxHeight: MediaQuery.sizeOf(context).height * 0.7,
           ),
-          builder: (context) {
-            return const InvoiceForm();
-          },
+          builder: (context) => const InvoiceForm(),
         );
       },
       child: Container(
@@ -154,6 +153,20 @@ class _MainContent extends StatelessWidget {
         itemBuilder: (context, index) {
           return InvoiceItem(
             invoice: invoices[index],
+            onTap: () {
+              getIt
+                  .get<InvoicesControllerCubit>()
+                  .setCurrentInvoice(invoices[index]);
+              showModalBottomSheet(
+                elevation: 2,
+                context: context,
+                scrollControlDisabledMaxHeightRatio: 1,
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.sizeOf(context).height * 0.7,
+                ),
+                builder: (context) => const InvoiceForm(),
+              );
+            },
           );
         },
         separatorBuilder: (context, index) => 16.verticalSpace,
