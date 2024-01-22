@@ -110,6 +110,12 @@ class _AppTextFieldState extends State<AppTextField> {
               decoration: InputDecoration(
                 fillColor: context.colors.backgroundPrimary,
                 filled: widget.isReadOnly,
+                contentPadding: widget.isReadOnly
+                    ? EdgeInsets.zero
+                    : EdgeInsets.symmetric(
+                        vertical: 8.h,
+                        horizontal: 12.w,
+                      ),
                 border: const OutlineInputBorder(),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(

@@ -165,11 +165,13 @@ class ItemListView extends StatelessWidget {
           flex: 3,
           child: Text('Total'),
         ),
-        8.horizontalSpace,
-        const Expanded(
-          flex: 1,
-          child: SizedBox.shrink(),
-        ),
+        if (!isReadOnly) ...[
+          8.horizontalSpace,
+          const Expanded(
+            flex: 1,
+            child: SizedBox.shrink(),
+          ),
+        ],
       ],
     );
   }
