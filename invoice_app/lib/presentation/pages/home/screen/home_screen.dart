@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:invoice_app/gen/assets.gen.dart';
 import 'package:invoice_app/injection/di.dart';
+import 'package:invoice_app/navigation/app_router.dart';
 import 'package:invoice_app/presentation/pages/home/cubit/invoices_controller_cubit.dart';
 import 'package:invoice_app/presentation/pages/home/screen/invoice_form.dart';
 import 'package:invoice_app/presentation/resources/app_colors.dart';
@@ -154,18 +155,19 @@ class _MainContent extends StatelessWidget {
           return InvoiceItem(
             invoice: invoices[index],
             onTap: () {
-              getIt
-                  .get<InvoicesControllerCubit>()
-                  .setCurrentInvoice(invoices[index]);
-              showModalBottomSheet(
-                elevation: 2,
-                context: context,
-                scrollControlDisabledMaxHeightRatio: 1,
-                constraints: BoxConstraints(
-                  maxHeight: MediaQuery.sizeOf(context).height * 0.7,
-                ),
-                builder: (context) => const InvoiceForm(),
-              );
+              // getIt
+              //     .get<InvoicesControllerCubit>()
+              //     .setCurrentInvoice(invoices[index]);
+              // showModalBottomSheet(
+              //   elevation: 2,
+              //   context: context,
+              //   scrollControlDisabledMaxHeightRatio: 1,
+              //   constraints: BoxConstraints(
+              //     maxHeight: MediaQuery.sizeOf(context).height * 0.7,
+              //   ),
+              //   builder: (context) => const InvoiceForm(),
+              // );
+              context.pushRoute(const InvoiceDetailRoute());
             },
           );
         },
