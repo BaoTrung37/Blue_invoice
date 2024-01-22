@@ -14,21 +14,27 @@ part 'invoice.g.dart';
 class Invoice with _$Invoice {
   const Invoice._();
   const factory Invoice({
-    @Index(unique: true) required String id,
-    required DateTime createdAt,
-    required DateTime paymentDue,
-    required String description,
-    required int paymentTerms,
-    required String clientName,
-    required String clientEmail,
-    required String status,
-    required Address senderAddress,
-    required Address clientAddress,
-    required List<Item> items,
-    required double total,
+    @Index(unique: true) @Default('') String id,
+    @Default('') String description,
+    @Default('') String clientName,
+    @Default('') String clientEmail,
+    @Default('') String status,
+    @Default(Address()) Address senderAddress,
+    @Default(Address()) Address clientAddress,
+    @Default(1) int paymentTerms,
+    @Default(0) double total,
+    DateTime? createdAt,
+    @Default([]) List<Item> items,
   }) = _InvoiceCollection;
 
   Id get invoiceId => Isar.autoIncrement;
+
+  @Index()
+  DateTime? get paymentDue => createdAt?.add(Duration(days: paymentTerms));
+
+  // @ignore
+  // PaymentTermsType? get paymentTermsType => PaymentTermsType.values
+  //     .firstWhereOrNull((element) => element.timePlus == paymentTerms);
 
   @enumerated
   InvoiceStatusType get invoiceStatus =>
@@ -57,12 +63,19 @@ class Address with _$Address {
 @freezed
 @Embedded(ignore: {'copyWith'})
 class Item with _$Item {
+  const Item._();
   const factory Item({
     String? name,
     int? quantity,
     double? price,
-    double? total,
   }) = _Item;
+
+  double? get total {
+    if (price != null && quantity != null) {
+      return price! * quantity!;
+    }
+    return null;
+  }
 
   factory Item.fromJson(Map<String, dynamic> json) => _$ItemFromJson(json);
 }

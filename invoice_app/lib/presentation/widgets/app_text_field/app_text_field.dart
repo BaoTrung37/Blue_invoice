@@ -14,6 +14,7 @@ class AppTextField extends StatefulWidget {
     this.validator,
     this.onTextChange,
     this.onSubmit,
+    this.onFinishTextChanged,
     this.keyboardType,
     this.textInputAction,
     this.title,
@@ -30,6 +31,7 @@ class AppTextField extends StatefulWidget {
   final FormFieldValidator<String>? validator;
   final ValueChanged<String?>? onTextChange;
   final ValueChanged<String?>? onSubmit;
+  final ValueChanged<String?>? onFinishTextChanged;
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
   final String? title;
@@ -86,41 +88,48 @@ class _AppTextFieldState extends State<AppTextField> {
             color: context.colors.backgroundSecondary,
             borderRadius: BorderRadius.circular(4.r),
           ),
-          child: TextFormField(
-            key: _textFieldKey,
-            onChanged: (value) {
-              widget.onTextChange?.call(value);
+          child: Focus(
+            onFocusChange: (focus) {
+              if (!focus) {
+                widget.onFinishTextChanged?.call(_textController.text);
+              }
             },
-            readOnly: widget.isReadOnly,
-            controller: _textController,
-            onFieldSubmitted: widget.onSubmit,
-            validator: widget.validator,
-            focusNode: _focusNode,
-            textInputAction: widget.textInputAction,
-            keyboardType: widget.keyboardType,
-            style: AppTextStyles.body1,
-            decoration: InputDecoration(
-              fillColor: context.colors.backgroundPrimary,
-              filled: widget.isReadOnly,
-              border: const OutlineInputBorder(),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: widget.isReadOnly
-                      ? context.colors.backgroundPrimary
-                      : context.colors.backgroundSecondary,
-                  width: 0.5,
+            child: TextFormField(
+              key: _textFieldKey,
+              onChanged: (value) {
+                widget.onTextChange?.call(value);
+              },
+              readOnly: widget.isReadOnly,
+              controller: _textController,
+              onFieldSubmitted: widget.onSubmit,
+              validator: widget.validator,
+              focusNode: _focusNode,
+              textInputAction: widget.textInputAction,
+              keyboardType: widget.keyboardType,
+              style: AppTextStyles.body1,
+              decoration: InputDecoration(
+                fillColor: context.colors.backgroundPrimary,
+                filled: widget.isReadOnly,
+                border: const OutlineInputBorder(),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: widget.isReadOnly
+                        ? context.colors.backgroundPrimary
+                        : context.colors.backgroundSecondary,
+                    width: 0.5,
+                  ),
                 ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: widget.isReadOnly
-                      ? context.colors.backgroundPrimary
-                      : context.colors.backgroundSecondary,
-                  width: 0.5,
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: widget.isReadOnly
+                        ? context.colors.backgroundPrimary
+                        : context.colors.backgroundSecondary,
+                    width: 0.5,
+                  ),
                 ),
+                errorBorder: InputBorder.none,
+                isDense: true,
               ),
-              errorBorder: InputBorder.none,
-              isDense: true,
             ),
           ),
         ),
