@@ -33,7 +33,6 @@ class ItemListView extends StatelessWidget {
               previous.currentInvoice.items != current.currentInvoice.items,
           builder: (context, state) {
             final items = state.currentInvoice.items;
-            print(items);
             return ListView.separated(
               key: UniqueKey(),
               shrinkWrap: true,

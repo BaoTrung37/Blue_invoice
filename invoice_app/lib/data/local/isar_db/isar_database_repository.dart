@@ -7,5 +7,5 @@ abstract class IsarDatabaseRepository {
   Future<List<Invoice>> getInvoices();
   Future<bool> addNewInvoice(Invoice invoice);
   Future<bool> updateInvoice(Invoice invoice);
-  Future<bool> deleteInvoiceById(int id);
+  Future<bool> deleteInvoiceById(String id);
 }

@@ -1,7 +1,9 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:invoice_app/injection/di.dart';
+import 'package:invoice_app/navigation/app_router.dart';
 import 'package:invoice_app/presentation/cubits/invoices/invoices_controller_cubit.dart';
 import 'package:invoice_app/presentation/pages/home/widgets/custom_button.dart';
 import 'package:invoice_app/presentation/resources/resources.dart';
@@ -43,7 +45,15 @@ class InvoiceDetailBottomBar extends StatelessWidget {
                     actions: [
                       ActionAppDialog(
                         actionDialogTitle: 'Delete',
-                        onAction: (context) {},
+                        onAction: (context) {
+                          getIt
+                              .get<InvoicesControllerCubit>()
+                              .deleteInvoice(state.currentInvoice.id)
+                              .then((value) {
+                            context.router
+                                .popUntilRouteWithName(HomeRoute.name);
+                          });
+                        },
                       ),
                       ActionAppDialog(
                         actionDialogTitle: 'Cancel',

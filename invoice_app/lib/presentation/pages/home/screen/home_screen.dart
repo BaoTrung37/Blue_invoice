@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    getIt.get<InvoicesControllerCubit>().initData();
+    getIt.get<InvoicesControllerCubit>().fetchData();
   }
 
   @override

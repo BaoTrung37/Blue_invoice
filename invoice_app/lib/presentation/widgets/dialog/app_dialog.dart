@@ -8,7 +8,7 @@ Future<T?> showAppDialog<T>(
   String? content,
   required List<ActionAppDialog> actions,
   Widget? child,
-  bool useRootNavigator = true,
+  bool useRootNavigator = false,
 }) async {
   return showDialog<T>(
     barrierDismissible: false,

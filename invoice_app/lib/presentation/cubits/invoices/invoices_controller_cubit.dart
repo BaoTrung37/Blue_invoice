@@ -15,22 +15,22 @@ part 'invoices_controller_state.dart';
 @lazySingleton
 class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
   InvoicesControllerCubit(
-    this.getAllInvoicesUseCase,
-    this.addNewInvoiceUseCase,
-    this.deleteInvoiceByIdUseCase,
-    this.updateInvoiceUseCase,
+    this._getAllInvoicesUseCase,
+    this._addNewInvoiceUseCase,
+    this._deleteInvoiceByIdUseCase,
+    this._updateInvoiceUseCase,
   ) : super(const InvoicesControllerState());
 
-  final GetAllInvoicesUseCase getAllInvoicesUseCase;
-  final AddNewInvoiceUseCase addNewInvoiceUseCase;
-  final DeleteInvoiceByIdUseCase deleteInvoiceByIdUseCase;
-  final UpdateInvoiceUseCase updateInvoiceUseCase;
+  final GetAllInvoicesUseCase _getAllInvoicesUseCase;
+  final AddNewInvoiceUseCase _addNewInvoiceUseCase;
+  final DeleteInvoiceByIdUseCase _deleteInvoiceByIdUseCase;
+  final UpdateInvoiceUseCase _updateInvoiceUseCase;
 
-  Future<void> initData() async {
+  Future<void> fetchData() async {
     try {
       emit(state.copyWith(loadingStatus: LoadingStatus.process));
 
-      final invoices = await getAllInvoicesUseCase.run();
+      final invoices = await _getAllInvoicesUseCase.run();
 
       emit(state.copyWith(
         loadingStatus: LoadingStatus.success,
@@ -43,7 +43,7 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
 
   Future<void> importMockData() async {
     await getIt.get<IsarDatabase>().importJson();
-    initData();
+    fetchData();
   }
 
   void setCurrentInvoice(Invoice invoice) {
@@ -56,7 +56,7 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
         status: InvoiceStatusType.daft.name,
       );
 
-      final isAddSuccess = await addNewInvoiceUseCase.run(currentInvoice);
+      final isAddSuccess = await _addNewInvoiceUseCase.run(currentInvoice);
       if (isAddSuccess) {
         emit(
           state.copyWith(
@@ -74,7 +74,7 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
   }
 
   Future<void> refreshTemplateData() async {
-    await initData();
+    await fetchData();
     clearTemplateData();
   }
 
@@ -339,9 +339,14 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
     }
   }
 
-  Future<bool> deleteInvoice(int id) async {
+  Future<bool> deleteInvoice(String id) async {
     try {
-      return await deleteInvoiceByIdUseCase.run(id);
+      final isDeleteSuccess = await _deleteInvoiceByIdUseCase.run(id);
+      if (isDeleteSuccess) {
+        await fetchData();
+        return true;
+      }
+      return false;
     } catch (e) {
       debugPrint(e.toString());
       return false;
