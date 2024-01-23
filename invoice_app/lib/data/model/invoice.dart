@@ -44,6 +44,8 @@ class Invoice with _$Invoice {
           (element) => element.name.toLowerCase() == status.toLowerCase()) ??
       InvoiceStatusType.daft;
 
+  bool get isNotFieldBlank => true;
+
   factory Invoice.fromJson(Map<String, dynamic> json) =>
       _$InvoiceFromJson(json);
 }
@@ -71,6 +73,9 @@ class Item with _$Item {
     int? quantity,
     double? price,
   }) = _Item;
+
+  bool get isNotFieldBlank =>
+      name != null && quantity != null && price != null;
 
   double? get total {
     if (price != null && quantity != null) {

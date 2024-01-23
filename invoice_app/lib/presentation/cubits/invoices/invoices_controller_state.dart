@@ -6,5 +6,6 @@ class InvoicesControllerState with _$InvoicesControllerState {
     @Default(LoadingStatus.initial) LoadingStatus loadingStatus,
     @Default([]) List<Invoice> invoices,
     @Default(Invoice()) Invoice currentInvoice,
+    @Default(Invoice()) Invoice temporaryInvoice,
   }) = _InvoicesControllerState;
 }
