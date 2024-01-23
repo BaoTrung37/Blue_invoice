@@ -4,11 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:invoice_app/gen/assets.gen.dart';
 import 'package:invoice_app/injection/di.dart';
-import 'package:invoice_app/presentation/pages/home/cubit/invoices_controller_cubit.dart';
 import 'package:invoice_app/presentation/pages/home/screen/views/item_list_view.dart';
+import 'package:invoice_app/presentation/pages/invoice_detail/screen/views/invoice_detail_bottom_bar.dart';
+import 'package:invoice_app/presentation/presentation.dart';
 import 'package:invoice_app/presentation/resources/resources.dart';
-import 'package:invoice_app/presentation/utilities/extensions/date_time_extension.dart';
-import 'package:invoice_app/presentation/widgets/app_text_field/app_text_field.dart';
 
 @RoutePage()
 class InvoiceDetailScreen extends StatelessWidget {
@@ -33,6 +32,7 @@ class InvoiceDetailScreen extends StatelessWidget {
         title: const Text('Go back'),
       ),
       body: const _MainContent(),
+      bottomNavigationBar: const InvoiceDetailBottomBar(),
     );
   }
 }
@@ -54,6 +54,26 @@ class _MainContent extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      const Text(
+                        'Status: ',
+                        style: AppTextStyles.h3,
+                      ),
+                      8.horizontalSpace,
+                      BlocBuilder<InvoicesControllerCubit,
+                          InvoicesControllerState>(
+                        bloc: getIt.get<InvoicesControllerCubit>(),
+                        builder: (context, state) {
+                          return InvoiceStatusButton(
+                            invoiceStatusType:
+                                state.currentInvoice.invoiceStatus,
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                   _buildBillFrom(),
                   Container(
                     margin: EdgeInsets.symmetric(vertical: 12.h),
@@ -62,7 +82,12 @@ class _MainContent extends StatelessWidget {
                     color: Colors.white,
                   ),
                   _buildBillTo(),
-                  24.verticalSpace,
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 12.h),
+                    height: 1,
+                    width: double.infinity,
+                    color: Colors.white,
+                  ),
                   const ItemListView(isReadOnly: true),
                 ],
               ),

@@ -4,10 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:invoice_app/gen/assets.gen.dart';
 import 'package:invoice_app/injection/di.dart';
-import 'package:invoice_app/presentation/pages/home/cubit/invoices_controller_cubit.dart';
+import 'package:invoice_app/presentation/presentation.dart';
 import 'package:invoice_app/presentation/resources/resources.dart';
-import 'package:invoice_app/presentation/utilities/extensions/date_time_extension.dart';
-import 'package:invoice_app/presentation/widgets/enums/payment_term.dart';
 
 class PaymentDueToTimeView extends StatelessWidget {
   const PaymentDueToTimeView({

@@ -5,11 +5,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:invoice_app/gen/assets.gen.dart';
 import 'package:invoice_app/injection/di.dart';
 import 'package:invoice_app/navigation/app_router.dart';
-import 'package:invoice_app/presentation/pages/home/cubit/invoices_controller_cubit.dart';
 import 'package:invoice_app/presentation/pages/home/screen/invoice_form.dart';
 import 'package:invoice_app/presentation/resources/app_colors.dart';
 import 'package:invoice_app/presentation/resources/app_text_styles.dart';
 
+import '../../../cubits/invoices/invoices_controller_cubit.dart';
 import '../widgets/invoice_item.dart';
 
 @RoutePage()

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:invoice_app/injection/di.dart';
-import 'package:invoice_app/presentation/pages/home/cubit/invoices_controller_cubit.dart';
+import 'package:invoice_app/presentation/cubits/cubits.dart';
 import 'package:invoice_app/presentation/resources/resources.dart';
 
 import '../../widgets/widgets.dart';
