@@ -32,11 +32,9 @@ class Invoice with _$Invoice {
   @Index()
   DateTime? get paymentDue => createdAt?.add(Duration(days: paymentTerms));
 
-  // @ignore
-  // PaymentTermsType? get paymentTermsType => PaymentTermsType.values
-  //     .firstWhereOrNull((element) => element.timePlus == paymentTerms);
-
-  double get amountDue => items.fold<double>(0, (previousValue, element) {
+  @override
+  @Index()
+  double get total => items.fold<double>(0, (previousValue, element) {
         return previousValue + (element.total ?? 0);
       });
 
