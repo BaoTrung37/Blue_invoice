@@ -1,9 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:invoice_app/data/local/isar_db/isar_database.dart';
 import 'package:invoice_app/data/model/invoice.dart';
 import 'package:invoice_app/domain/use_cases/invoices/invoices.dart';
+import 'package:invoice_app/injection/di.dart';
 import 'package:invoice_app/presentation/presentation.dart';
 
 part 'invoices_controller_cubit.freezed.dart';
@@ -14,10 +17,14 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
   InvoicesControllerCubit(
     this.getAllInvoicesUseCase,
     this.addNewInvoiceUseCase,
+    this.deleteInvoiceByIdUseCase,
+    this.updateInvoiceUseCase,
   ) : super(const InvoicesControllerState());
 
   final GetAllInvoicesUseCase getAllInvoicesUseCase;
   final AddNewInvoiceUseCase addNewInvoiceUseCase;
+  final DeleteInvoiceByIdUseCase deleteInvoiceByIdUseCase;
+  final UpdateInvoiceUseCase updateInvoiceUseCase;
 
   Future<void> initData() async {
     try {
@@ -32,6 +39,11 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
     } catch (e) {
       emit(state.copyWith(loadingStatus: LoadingStatus.error));
     }
+  }
+
+  Future<void> importMockData() async {
+    await getIt.get<IsarDatabase>().importJson();
+    initData();
   }
 
   void setCurrentInvoice(Invoice invoice) {
@@ -314,6 +326,25 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
           ),
         ),
       );
+    }
+  }
+
+  Future<bool> updateInvoice(Invoice invoice) async {
+    try {
+      // return await deleteInvoiceByIdUseCase.run(id);
+      return true;
+    } catch (e) {
+      debugPrint(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> deleteInvoice(int id) async {
+    try {
+      return await deleteInvoiceByIdUseCase.run(id);
+    } catch (e) {
+      debugPrint(e.toString());
+      return false;
     }
   }
 }
