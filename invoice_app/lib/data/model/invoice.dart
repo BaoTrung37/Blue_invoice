@@ -36,6 +36,10 @@ class Invoice with _$Invoice {
   // PaymentTermsType? get paymentTermsType => PaymentTermsType.values
   //     .firstWhereOrNull((element) => element.timePlus == paymentTerms);
 
+  double get amountDue => items.fold<double>(0, (previousValue, element) {
+        return previousValue + (element.total ?? 0);
+      });
+
   @enumerated
   InvoiceStatusType get invoiceStatus =>
       InvoiceStatusType.values.firstWhereOrNull(
