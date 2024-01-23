@@ -181,35 +181,48 @@ class _MainContent extends StatelessWidget {
   }
 
   Widget _buildEmptyInvoiceList() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 40.w),
-      child: Column(
-        children: [
-          Assets.icons.illustrationEmpty.svg(height: 150.h),
-          24.verticalSpace,
-          const Text(
-            'There is nothing here',
-            style: AppTextStyles.h2,
-          ),
-          24.verticalSpace,
-          RichText(
-            text: TextSpan(
-              text: 'Create an invoice by click the ',
-              children: [
-                TextSpan(
-                  text: 'New Invoice ',
-                  style: AppTextStyles.body1.copyWith(
-                    color: const Color(0xFFCED3E9),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const TextSpan(text: 'button and get started'),
-              ],
-              style: AppTextStyles.body1,
+    return Expanded(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 40.w),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Assets.icons.illustrationEmpty.svg(height: 150.h),
+            24.verticalSpace,
+            const Text(
+              'There is nothing here',
+              style: AppTextStyles.h2,
             ),
-            textAlign: TextAlign.center,
-          ),
-        ],
+            24.verticalSpace,
+            RichText(
+              text: TextSpan(
+                text: 'Create an invoice by click the ',
+                children: [
+                  TextSpan(
+                    text: 'New Invoice ',
+                    style: AppTextStyles.body1.copyWith(
+                      color: const Color(0xFFCED3E9),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const TextSpan(text: 'button and get started'),
+                ],
+                style: AppTextStyles.body1,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            16.verticalSpace,
+            ElevatedButton(
+              onPressed: () {
+                getIt.get<InvoicesControllerCubit>().importMockData();
+              },
+              child: const Text(
+                'Import Fake data',
+                style: AppTextStyles.h2,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
