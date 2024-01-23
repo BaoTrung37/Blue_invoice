@@ -150,7 +150,7 @@ class ItemListView extends StatelessWidget {
                 bloc: getIt.get<InvoicesControllerCubit>(),
                 builder: (context, state) {
                   return Text(
-                    '£ ${state.currentInvoice.amountDue}',
+                    '£ ${state.currentInvoice.total}',
                     style: AppTextStyles.h2,
                   );
                 },
