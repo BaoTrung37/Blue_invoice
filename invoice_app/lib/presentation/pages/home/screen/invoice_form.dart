@@ -44,6 +44,10 @@ class _MainContent extends StatelessWidget {
     required this.keyForm,
   }) : super(key: key);
 
+  void checkValidate() {
+    keyForm.currentState?.validate();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -95,7 +99,7 @@ class _MainContent extends StatelessWidget {
             const Text('Bill Form', style: AppTextStyles.h3),
             16.verticalSpace,
             AppTextField(
-              title: 'Stress Address',
+              title: 'Street Address',
               initialText: state.currentInvoice.senderAddress.street,
               onTextChange: (value) {
                 getIt<InvoicesControllerCubit>().changedBillFromAddress(value!);

@@ -54,6 +54,7 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
     try {
       final currentInvoice = state.currentInvoice.copyWith(
         status: InvoiceStatusType.daft.name,
+        createdAt: state.currentInvoice.createdAt ?? DateTime.now(),
       );
 
       final isAddSuccess = await _addNewInvoiceUseCase.run(currentInvoice);

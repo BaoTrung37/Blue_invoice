@@ -74,8 +74,7 @@ class Item with _$Item {
     double? price,
   }) = _Item;
 
-  bool get isNotFieldBlank =>
-      name != null && quantity != null && price != null;
+  bool get isNotFieldBlank => name != null && quantity != null && price != null;
 
   double? get total {
     if (price != null && quantity != null) {

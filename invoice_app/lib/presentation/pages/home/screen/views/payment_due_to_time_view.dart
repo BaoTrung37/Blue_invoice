@@ -30,7 +30,26 @@ class PaymentDueToTimeView extends StatelessWidget {
                     InvoicesControllerState>(
                   bloc: getIt.get<InvoicesControllerCubit>(),
                   builder: (context, state) {
-                    return _buildCreateTimePicker(context, state);
+                    return _buildCreateTimePicker(
+                      context,
+                      state: state,
+                      onTap: () async {
+                        final dateTime = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate:
+                              DateTime.now().subtract(const Duration(days: 30)),
+                          lastDate: DateTime.now().add(
+                            const Duration(days: 30),
+                          ),
+                        );
+                        if (dateTime != null) {
+                          getIt
+                              .get<InvoicesControllerCubit>()
+                              .changedBillToClientCreateAt(dateTime);
+                        }
+                      },
+                    );
                   },
                 ),
               ),
@@ -43,7 +62,7 @@ class PaymentDueToTimeView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Issue Date',
+                'Payment Terms',
                 style: AppTextStyles.h3,
               ),
               8.verticalSpace,
@@ -127,23 +146,13 @@ class PaymentDueToTimeView extends StatelessWidget {
   }
 
   Widget _buildCreateTimePicker(
-      BuildContext context, InvoicesControllerState state) {
+    BuildContext context, {
+    required InvoicesControllerState state,
+    required VoidCallback onTap,
+  }) {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
-      onTap: () async {
-        final dateTime = await showDatePicker(
-          context: context,
-          firstDate: DateTime.now().subtract(const Duration(days: 30)),
-          lastDate: DateTime.now().add(
-            const Duration(days: 30),
-          ),
-        );
-        if (dateTime != null) {
-          getIt
-              .get<InvoicesControllerCubit>()
-              .changedBillToClientCreateAt(dateTime);
-        }
-      },
+      onTap: onTap,
       child: Container(
         height: 50.h,
         padding: EdgeInsets.symmetric(

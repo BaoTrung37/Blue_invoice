@@ -109,7 +109,7 @@ class _MainContent extends StatelessWidget {
             const Text('Bill Form', style: AppTextStyles.h3),
             16.verticalSpace,
             AppTextField(
-              title: 'Stress Address',
+              title: 'Street Address',
               isReadOnly: true,
               initialText: state.currentInvoice.senderAddress.street,
             ),
