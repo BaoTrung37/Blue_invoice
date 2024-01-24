@@ -126,57 +126,64 @@ class _MainContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
-      child: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+    return BlocBuilder<InvoicesControllerCubit, InvoicesControllerState>(
+      bloc: getIt.get<InvoicesControllerCubit>(),
+      buildWhen: (previous, current) =>
+          previous.currentInvoice != current.currentInvoice,
+      builder: (context, state) {
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text(
-                        'Status: ',
-                        style: AppTextStyles.h3,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          const Text(
+                            'Status: ',
+                            style: AppTextStyles.h3,
+                          ),
+                          8.horizontalSpace,
+                          BlocBuilder<InvoicesControllerCubit,
+                              InvoicesControllerState>(
+                            bloc: getIt.get<InvoicesControllerCubit>(),
+                            builder: (context, state) {
+                              return InvoiceStatusButton(
+                                invoiceStatusType:
+                                    state.currentInvoice.invoiceStatus,
+                              );
+                            },
+                          ),
+                        ],
                       ),
-                      8.horizontalSpace,
-                      BlocBuilder<InvoicesControllerCubit,
-                          InvoicesControllerState>(
-                        bloc: getIt.get<InvoicesControllerCubit>(),
-                        builder: (context, state) {
-                          return InvoiceStatusButton(
-                            invoiceStatusType:
-                                state.currentInvoice.invoiceStatus,
-                          );
-                        },
+                      _buildBillFrom(),
+                      Container(
+                        margin: EdgeInsets.symmetric(vertical: 12.h),
+                        height: 1,
+                        width: double.infinity,
+                        color: Colors.white,
                       ),
+                      _buildBillTo(),
+                      Container(
+                        margin: EdgeInsets.symmetric(vertical: 12.h),
+                        height: 1,
+                        width: double.infinity,
+                        color: Colors.white,
+                      ),
+                      const ItemListView(isReadOnly: true),
                     ],
                   ),
-                  _buildBillFrom(),
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 12.h),
-                    height: 1,
-                    width: double.infinity,
-                    color: Colors.white,
-                  ),
-                  _buildBillTo(),
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 12.h),
-                    height: 1,
-                    width: double.infinity,
-                    color: Colors.white,
-                  ),
-                  const ItemListView(isReadOnly: true),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 

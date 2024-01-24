@@ -341,6 +341,7 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
 
   Future<void> updateInvoice() async {
     try {
+      emit(state.copyWith(loadingStatus: LoadingStatus.process));
       final temporaryInvoice = state.temporaryInvoice
           .copyWith(status: InvoiceStatusType.pending.name);
 
@@ -349,6 +350,7 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
       if (isUpdateSuccess) {
         emit(state.copyWith(
           currentInvoice: temporaryInvoice,
+          loadingStatus: LoadingStatus.success,
         ));
       }
     } catch (e) {
