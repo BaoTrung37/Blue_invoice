@@ -8,7 +8,6 @@ import 'package:invoice_app/presentation/pages/home/screen/views/payment_due_to_
 import 'package:invoice_app/presentation/presentation.dart';
 import 'package:invoice_app/presentation/resources/app_colors.dart';
 import 'package:invoice_app/presentation/resources/app_text_styles.dart';
-import 'package:invoice_app/presentation/widgets/dialog/app_dialog.dart';
 
 import '../widgets/widgets.dart';
 import 'views/item_list_view.dart';
@@ -35,28 +34,28 @@ class _InvoiceFormState extends State<InvoiceForm> {
     return true;
   }
 
-  void onAddInvoiceToDb() async {
-    final isValidate = validateForm();
-    if (isValidate) {
-      getIt.get<InvoicesControllerCubit>().addInvoiceToDb(true).then(
-            (value) => context.popRoute(),
-          );
-    } else {
-      showAppDialog(
-        context,
-        title: 'Confirmation',
-        content:
-            'You haven\'t filled in all the information. Please filled the form.',
-        actions: [
-          ActionAppDialog(
-            actionDialogTitle: 'OK',
-            onAction: (context) async {
-              context.popRoute();
-            },
-          ),
-        ],
-      );
-    }
+  void onAddInvoiceToDb() {
+    // final isValidate = validateForm();
+    // if (isValidate) {
+    //   getIt.get<InvoicesControllerCubit>().addInvoiceToDb(true).then(
+    //         (value) => context.popRoute(),
+    //       );
+    // } else {
+    //   showAppDialog(
+    //     context,
+    //     title: 'Confirmation',
+    //     content:
+    //         'You haven\'t filled in all the information. Please filled the form.',
+    //     actions: [
+    //       ActionAppDialog(
+    //         actionDialogTitle: 'OK',
+    //         onAction: (context) async {
+    //           context.popRoute();
+    //         },
+    //       ),
+    //     ],
+    //   );
+    // }
   }
 
   @override
@@ -65,11 +64,11 @@ class _InvoiceFormState extends State<InvoiceForm> {
       resizeToAvoidBottomInset: false,
       backgroundColor: context.colors.backgroundPrimary,
       body: _MainContent(keyForm: _keyForm),
-      bottomNavigationBar: _buildBottomBar(context, onAddInvoiceToDb),
+      bottomNavigationBar: _buildBottomBar(context),
     );
   }
 
-  Widget _buildBottomBar(BuildContext context, VoidCallback onTapSave) {
+  Widget _buildBottomBar(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(bottom: 16.h),
       height: 60.h,
@@ -93,20 +92,30 @@ class _InvoiceFormState extends State<InvoiceForm> {
           ),
           CustomButton(
             onTap: () {
-              getIt.get<InvoicesControllerCubit>().addInvoiceToDb(false).then(
+              getIt
+                  .get<InvoicesControllerCubit>()
+                  .addInvoiceToDb(isSend: false)
+                  .then(
                     (value) => context.popRoute(),
                   );
             },
             backgroundColor: const Color(0xFF373B54),
             child: Text(
-              'Save as Daft',
+              'Save as Draft',
               style: AppTextStyles.hs3.copyWith(
                 color: const Color(0xFFDEE3F9),
               ),
             ),
           ),
           CustomButton(
-            onTap: onTapSave,
+            onTap: () {
+              getIt
+                  .get<InvoicesControllerCubit>()
+                  .addInvoiceToDb(isSend: true)
+                  .then(
+                    (value) => context.popRoute(),
+                  );
+            },
             backgroundColor: const Color(0xFF7C5DF9),
             child: Text(
               'Save & Send',

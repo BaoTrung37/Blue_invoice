@@ -42,7 +42,7 @@ class Invoice with _$Invoice {
   InvoiceStatusType get invoiceStatus =>
       InvoiceStatusType.values.firstWhereOrNull(
           (element) => element.name.toLowerCase() == status.toLowerCase()) ??
-      InvoiceStatusType.daft;
+      InvoiceStatusType.draft;
 
   bool get isNotFieldBlank => true;
 

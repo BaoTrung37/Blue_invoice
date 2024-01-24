@@ -50,9 +50,9 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
     emit(state.copyWith(currentInvoice: invoice));
   }
 
-  Future<bool> addInvoiceToDb(bool isFilled) async {
+  Future<bool> addInvoiceToDb({bool isSend = false}) async {
     final status =
-        isFilled ? InvoiceStatusType.pending.name : InvoiceStatusType.daft.name;
+        isSend ? InvoiceStatusType.pending.name : InvoiceStatusType.draft.name;
     try {
       final currentInvoice = state.currentInvoice.copyWith(
         status: status,

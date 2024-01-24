@@ -4,10 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:invoice_app/gen/assets.gen.dart';
 import 'package:invoice_app/injection/di.dart';
+import 'package:invoice_app/navigation/app_router.dart';
 import 'package:invoice_app/presentation/pages/home/screen/views/item_list_view.dart';
-import 'package:invoice_app/presentation/pages/invoice_detail/screen/views/invoice_detail_bottom_bar.dart';
+import 'package:invoice_app/presentation/pages/home/widgets/custom_button.dart';
 import 'package:invoice_app/presentation/presentation.dart';
 import 'package:invoice_app/presentation/resources/resources.dart';
+import 'package:invoice_app/presentation/widgets/dialog/app_dialog.dart';
 
 @RoutePage()
 class InvoiceDetailScreen extends StatelessWidget {
@@ -32,7 +34,86 @@ class InvoiceDetailScreen extends StatelessWidget {
         title: const Text('Go back'),
       ),
       body: const _MainContent(),
-      bottomNavigationBar: const InvoiceDetailBottomBar(),
+      bottomNavigationBar: _buildBottomBar(),
+    );
+  }
+
+  Widget _buildBottomBar() {
+    return BlocBuilder<InvoicesControllerCubit, InvoicesControllerState>(
+      bloc: getIt.get<InvoicesControllerCubit>(),
+      builder: (context, state) {
+        return Container(
+          padding: EdgeInsets.only(bottom: 16.h),
+          height: 65.h,
+          width: double.infinity,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              CustomButton(
+                onTap: () {
+                  //
+                },
+                backgroundColor: const Color(0xFF373B54),
+                child: Text(
+                  'Edit',
+                  style: AppTextStyles.hs3.copyWith(
+                    color: const Color(0xFFDEE3F9),
+                  ),
+                ),
+              ),
+              CustomButton(
+                backgroundColor: const Color(0xFFEC5757),
+                onTap: () {
+                  showAppDialog(
+                    context,
+                    title: 'Confirm Deletion',
+                    content:
+                        'Are you sure you want to delete invoice #${state.currentInvoice.id}? This action cannot be undone.',
+                    actions: [
+                      ActionAppDialog(
+                        actionDialogTitle: 'Delete',
+                        onAction: (context) {
+                          getIt
+                              .get<InvoicesControllerCubit>()
+                              .deleteInvoice(state.currentInvoice.id)
+                              .then((value) {
+                            context.router
+                                .popUntilRouteWithName(HomeRoute.name);
+                          });
+                        },
+                      ),
+                      ActionAppDialog(
+                        actionDialogTitle: 'Cancel',
+                        onAction: (context) {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  );
+                },
+                child: Text(
+                  'Delete',
+                  style: AppTextStyles.hs3.copyWith(
+                    color: const Color(0xFFFEFEFF),
+                  ),
+                ),
+              ),
+              CustomButton(
+                onTap: () {
+                  getIt.get<InvoicesControllerCubit>();
+                },
+                backgroundColor: const Color(0xFF7C5DF9),
+                child: Text(
+                  'Make as Paid',
+                  style: AppTextStyles.hs3.copyWith(
+                    color: const Color(0xFFFEFEFF),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
