@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:invoice_app/gen/assets.gen.dart';
 import 'package:invoice_app/injection/di.dart';
 import 'package:invoice_app/navigation/app_router.dart';
+import 'package:invoice_app/presentation/pages/home/screen/invoice_form.dart';
 import 'package:invoice_app/presentation/pages/home/screen/views/item_list_view.dart';
 import 'package:invoice_app/presentation/pages/home/widgets/custom_button.dart';
 import 'package:invoice_app/presentation/presentation.dart';
@@ -51,7 +52,7 @@ class InvoiceDetailScreen extends StatelessWidget {
             children: [
               CustomButton(
                 onTap: () {
-                  //
+                  showInvoiceFormBottomSheet(context, isEdit: true);
                 },
                 backgroundColor: const Color(0xFF373B54),
                 child: Text(

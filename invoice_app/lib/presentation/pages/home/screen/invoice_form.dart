@@ -12,9 +12,30 @@ import 'package:invoice_app/presentation/resources/app_text_styles.dart';
 import '../widgets/widgets.dart';
 import 'views/item_list_view.dart';
 
-class InvoiceForm extends StatefulWidget {
-  const InvoiceForm({super.key});
+void showInvoiceFormBottomSheet(
+  BuildContext context, {
+  bool isEdit = false,
+}) {
+  showModalBottomSheet(
+    elevation: 2,
+    context: context,
+    scrollControlDisabledMaxHeightRatio: 1,
+    constraints: BoxConstraints(
+      maxHeight: MediaQuery.sizeOf(context).height * 0.7,
+    ),
+    builder: (context) => InvoiceForm(
+      isEdit: isEdit,
+    ),
+  );
+}
 
+class InvoiceForm extends StatefulWidget {
+  const InvoiceForm({
+    Key? key,
+    this.isEdit = false,
+  }) : super(key: key);
+
+  final bool isEdit;
   @override
   State<InvoiceForm> createState() => _InvoiceFormState();
 }
@@ -69,6 +90,12 @@ class _InvoiceFormState extends State<InvoiceForm> {
   }
 
   Widget _buildBottomBar(BuildContext context) {
+    return widget.isEdit
+        ? _buildEditHandleView(context)
+        : _buildCreateHandleView(context);
+  }
+
+  Widget _buildCreateHandleView(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(bottom: 16.h),
       height: 60.h,
@@ -121,6 +148,51 @@ class _InvoiceFormState extends State<InvoiceForm> {
               'Save & Send',
               style: AppTextStyles.hs3.copyWith(
                 color: const Color(0xFFFEFEFF),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEditHandleView(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(bottom: 16.h),
+      height: 60.h,
+      width: double.infinity,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          CustomButton(
+            backgroundColor: const Color(0xFFF9FAFE),
+            onTap: () {
+              // getIt.get<InvoicesControllerCubit>().refreshTemplateData().then(
+              //       (value) => context.popRoute(),
+              //     );
+              context.popRoute();
+            },
+            child: Text(
+              'Cancel',
+              style: AppTextStyles.hs3.copyWith(
+                color: const Color(0xFF828DC5),
+              ),
+            ),
+          ),
+          CustomButton(
+            onTap: () {
+              getIt
+                  .get<InvoicesControllerCubit>()
+                  .addInvoiceToDb(isSend: false)
+                  .then(
+                    (value) => context.popRoute(),
+                  );
+            },
+            backgroundColor: const Color(0xFF373B54),
+            child: Text(
+              'Save changed',
+              style: AppTextStyles.hs3.copyWith(
+                color: const Color(0xFFDEE3F9),
               ),
             ),
           ),
