@@ -146,10 +146,11 @@ class _MainContent extends StatelessWidget {
           return InvoiceItem(
             invoice: invoices[index],
             onTap: () {
-              getIt
-                  .get<InvoicesControllerCubit>()
-                  .setAndUpdateCurrentInvoice(invoices[index]);
-              context.pushRoute(const InvoiceDetailRoute());
+              context.pushRoute(
+                InvoiceDetailRoute(
+                  invoiceId: invoices[index].id,
+                ),
+              );
             },
           );
         },

@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,7 +15,12 @@ import 'package:invoice_app/presentation/widgets/dialog/app_dialog.dart';
 
 @RoutePage()
 class InvoiceDetailScreen extends StatelessWidget {
-  const InvoiceDetailScreen({super.key});
+  const InvoiceDetailScreen({
+    Key? key,
+    required this.invoiceId,
+  }) : super(key: key);
+
+  final String invoiceId;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +40,16 @@ class InvoiceDetailScreen extends StatelessWidget {
         backgroundColor: context.colors.backgroundPrimary,
         title: const Text('Go back'),
       ),
-      body: const _MainContent(),
+      body: BlocBuilder<InvoicesControllerCubit, InvoicesControllerState>(
+        bloc: getIt.get<InvoicesControllerCubit>()
+          ..setCurrentInvoice(invoiceId),
+        builder: (context, state) {
+          return LoadingView(
+            status: state.loadingStatus,
+            child: const _MainContent(),
+          );
+        },
+      ),
       bottomNavigationBar: _buildBottomBar(),
     );
   }
@@ -101,7 +116,7 @@ class InvoiceDetailScreen extends StatelessWidget {
               ),
               CustomButton(
                 onTap: () {
-                  getIt.get<InvoicesControllerCubit>();
+                  getIt.get<InvoicesControllerCubit>().makeInvoicePaid();
                 },
                 backgroundColor: const Color(0xFF7C5DF9),
                 child: Text(
@@ -126,64 +141,57 @@ class _MainContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<InvoicesControllerCubit, InvoicesControllerState>(
-      bloc: getIt.get<InvoicesControllerCubit>(),
-      buildWhen: (previous, current) =>
-          previous.currentInvoice != current.currentInvoice,
-      builder: (context, state) {
-        return Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
+      child: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          const Text(
-                            'Status: ',
-                            style: AppTextStyles.h3,
-                          ),
-                          8.horizontalSpace,
-                          BlocBuilder<InvoicesControllerCubit,
-                              InvoicesControllerState>(
-                            bloc: getIt.get<InvoicesControllerCubit>(),
-                            builder: (context, state) {
-                              return InvoiceStatusButton(
-                                invoiceStatusType:
-                                    state.currentInvoice.invoiceStatus,
-                              );
-                            },
-                          ),
-                        ],
+                      const Text(
+                        'Status: ',
+                        style: AppTextStyles.h3,
                       ),
-                      _buildBillFrom(),
-                      Container(
-                        margin: EdgeInsets.symmetric(vertical: 12.h),
-                        height: 1,
-                        width: double.infinity,
-                        color: Colors.white,
+                      8.horizontalSpace,
+                      BlocBuilder<InvoicesControllerCubit,
+                          InvoicesControllerState>(
+                        bloc: getIt.get<InvoicesControllerCubit>(),
+                        builder: (context, state) {
+                          return InvoiceStatusButton(
+                            invoiceStatusType:
+                                state.currentInvoice.invoiceStatus,
+                          );
+                        },
                       ),
-                      _buildBillTo(),
-                      Container(
-                        margin: EdgeInsets.symmetric(vertical: 12.h),
-                        height: 1,
-                        width: double.infinity,
-                        color: Colors.white,
-                      ),
-                      const ItemListView(isReadOnly: true),
                     ],
                   ),
-                ),
+                  _buildBillFrom(),
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 12.h),
+                    height: 1,
+                    width: double.infinity,
+                    color: Colors.white,
+                  ),
+                  _buildBillTo(),
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 12.h),
+                    height: 1,
+                    width: double.infinity,
+                    color: Colors.white,
+                  ),
+                  const ItemListView(isReadOnly: true),
+                ],
               ),
-            ],
+            ),
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 

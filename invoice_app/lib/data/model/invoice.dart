@@ -27,7 +27,7 @@ class Invoice with _$Invoice {
     @Default([]) List<Item> items,
   }) = _InvoiceCollection;
 
-  Id get invoiceId => Isar.autoIncrement;
+  Id get isarId => Isar.autoIncrement;
 
   @Index()
   DateTime? get paymentDue => createdAt?.add(Duration(days: paymentTerms));

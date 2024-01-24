@@ -5,6 +5,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:invoice_app/data/local/isar_db/isar_database.dart';
 import 'package:invoice_app/data/model/invoice.dart';
+import 'package:invoice_app/domain/use_cases/invoices/get_invoice_by_id_use_case.dart';
 import 'package:invoice_app/domain/use_cases/invoices/invoices.dart';
 import 'package:invoice_app/injection/di.dart';
 import 'package:invoice_app/presentation/presentation.dart';
@@ -19,12 +20,14 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
     this._addNewInvoiceUseCase,
     this._deleteInvoiceByIdUseCase,
     this._updateInvoiceUseCase,
+    this._getInvoiceByIdUseCase,
   ) : super(const InvoicesControllerState());
 
   final GetAllInvoicesUseCase _getAllInvoicesUseCase;
   final AddNewInvoiceUseCase _addNewInvoiceUseCase;
   final DeleteInvoiceByIdUseCase _deleteInvoiceByIdUseCase;
   final UpdateInvoiceUseCase _updateInvoiceUseCase;
+  final GetInvoiceByIdUseCase _getInvoiceByIdUseCase;
 
   Future<void> fetchData() async {
     try {
@@ -46,8 +49,19 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
     fetchData();
   }
 
-  void setAndUpdateCurrentInvoice(Invoice invoice) {
-    emit(state.copyWith(currentInvoice: invoice));
+  void setCurrentInvoice(String invoiceId) async {
+    try {
+      emit(state.copyWith(loadingStatus: LoadingStatus.process));
+      final invoice =
+          await _getInvoiceByIdUseCase.run(invoiceId) ?? const Invoice();
+      emit(state.copyWith(
+        currentInvoice: invoice,
+        temporaryInvoice: invoice,
+        loadingStatus: LoadingStatus.success,
+      ));
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   Future<bool> addInvoiceToDb({bool isDraft = false}) async {
@@ -352,6 +366,24 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
           currentInvoice: temporaryInvoice,
           loadingStatus: LoadingStatus.success,
         ));
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  Future<void> makeInvoicePaid() async {
+    try {
+      if (state.currentInvoice.invoiceStatus == InvoiceStatusType.pending) {
+        final currentInvoice =
+            state.currentInvoice.copyWith(status: InvoiceStatusType.paid.name);
+        final isUpdateSuccess = await _updateInvoiceUseCase.run(currentInvoice);
+
+        if (isUpdateSuccess) {
+          emit(state.copyWith(
+            currentInvoice: currentInvoice,
+          ));
+        }
       }
     } catch (e) {
       debugPrint(e.toString());
