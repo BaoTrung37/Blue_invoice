@@ -14,7 +14,7 @@ part 'invoice.g.dart';
 class Invoice with _$Invoice {
   const Invoice._();
   const factory Invoice({
-    @Index(unique: true) @Default('') String id,
+    @Index(unique: true, replace: true) @Default('') String id,
     @Default('') String description,
     @Default('') String clientName,
     @Default('') String clientEmail,
@@ -43,8 +43,6 @@ class Invoice with _$Invoice {
       InvoiceStatusType.values.firstWhereOrNull(
           (element) => element.name.toLowerCase() == status.toLowerCase()) ??
       InvoiceStatusType.draft;
-
-  bool get isNotFieldBlank => true;
 
   factory Invoice.fromJson(Map<String, dynamic> json) =>
       _$InvoiceFromJson(json);

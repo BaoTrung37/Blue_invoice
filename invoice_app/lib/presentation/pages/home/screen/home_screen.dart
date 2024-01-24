@@ -90,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildNewInvoiceButton(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        getIt.get<InvoicesControllerCubit>().clearTemplateData();
+        getIt.get<InvoicesControllerCubit>().clearTemporaryData();
         showInvoiceFormBottomSheet(context);
       },
       child: Container(
@@ -141,19 +141,14 @@ class _MainContent extends StatelessWidget {
     final invoices = state.invoices;
     return Expanded(
       child: ListView.separated(
-        reverse: true,
         shrinkWrap: true,
         itemBuilder: (context, index) {
           return InvoiceItem(
             invoice: invoices[index],
             onTap: () {
-              // getIt
-              //     .get<InvoicesControllerCubit>()
-              //     .setCurrentInvoice(invoices[index]);
-
               getIt
                   .get<InvoicesControllerCubit>()
-                  .setCurrentInvoice(invoices[index]);
+                  .setAndUpdateCurrentInvoice(invoices[index]);
               context.pushRoute(const InvoiceDetailRoute());
             },
           );

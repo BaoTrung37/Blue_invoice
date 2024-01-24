@@ -48,35 +48,11 @@ class _InvoiceFormState extends State<InvoiceForm> {
     _keyForm = GlobalKey<FormState>();
   }
 
-  bool validateForm() {
+  bool checkValidateForm() {
     if (_keyForm.currentState?.validate() == false) {
       return false;
     }
     return true;
-  }
-
-  void onAddInvoiceToDb() {
-    // final isValidate = validateForm();
-    // if (isValidate) {
-    //   getIt.get<InvoicesControllerCubit>().addInvoiceToDb(true).then(
-    //         (value) => context.popRoute(),
-    //       );
-    // } else {
-    //   showAppDialog(
-    //     context,
-    //     title: 'Confirmation',
-    //     content:
-    //         'You haven\'t filled in all the information. Please filled the form.',
-    //     actions: [
-    //       ActionAppDialog(
-    //         actionDialogTitle: 'OK',
-    //         onAction: (context) async {
-    //           context.popRoute();
-    //         },
-    //       ),
-    //     ],
-    //   );
-    // }
   }
 
   @override
@@ -121,7 +97,7 @@ class _InvoiceFormState extends State<InvoiceForm> {
             onTap: () {
               getIt
                   .get<InvoicesControllerCubit>()
-                  .addInvoiceToDb(isSend: false)
+                  .addInvoiceToDb(isDraft: true)
                   .then(
                     (value) => context.popRoute(),
                   );
@@ -136,10 +112,7 @@ class _InvoiceFormState extends State<InvoiceForm> {
           ),
           CustomButton(
             onTap: () {
-              getIt
-                  .get<InvoicesControllerCubit>()
-                  .addInvoiceToDb(isSend: true)
-                  .then(
+              getIt.get<InvoicesControllerCubit>().addInvoiceToDb().then(
                     (value) => context.popRoute(),
                   );
             },
@@ -167,9 +140,7 @@ class _InvoiceFormState extends State<InvoiceForm> {
           CustomButton(
             backgroundColor: const Color(0xFFF9FAFE),
             onTap: () {
-              // getIt.get<InvoicesControllerCubit>().refreshTemplateData().then(
-              //       (value) => context.popRoute(),
-              //     );
+              getIt.get<InvoicesControllerCubit>().discardTemporaryChanged();
               context.popRoute();
             },
             child: Text(
@@ -181,14 +152,11 @@ class _InvoiceFormState extends State<InvoiceForm> {
           ),
           CustomButton(
             onTap: () {
-              getIt
-                  .get<InvoicesControllerCubit>()
-                  .addInvoiceToDb(isSend: false)
-                  .then(
+              getIt.get<InvoicesControllerCubit>().updateInvoice().then(
                     (value) => context.popRoute(),
                   );
             },
-            backgroundColor: const Color(0xFF373B54),
+            backgroundColor: context.colors.button2Color,
             child: Text(
               'Save changed',
               style: AppTextStyles.hs3.copyWith(
