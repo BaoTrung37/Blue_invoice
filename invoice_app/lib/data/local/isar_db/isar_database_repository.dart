@@ -6,5 +6,6 @@ abstract class IsarDatabaseRepository {
   Future<bool> clearDatabase();
   Future<List<Invoice>> getInvoices();
   Future<bool> addNewInvoice(Invoice invoice);
-  Future<bool> updateInvoiceById(int id, Invoice invoice);
+  Future<bool> updateInvoice(Invoice invoice);
+  Future<bool> deleteInvoiceById(String id);
 }

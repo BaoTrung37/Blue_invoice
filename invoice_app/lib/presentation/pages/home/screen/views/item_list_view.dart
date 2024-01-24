@@ -1,9 +1,9 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:invoice_app/gen/assets.gen.dart';
 import 'package:invoice_app/injection/di.dart';
-import 'package:invoice_app/presentation/pages/home/cubit/invoices_controller_cubit.dart';
 import 'package:invoice_app/presentation/pages/home/widgets/custom_button.dart';
 import 'package:invoice_app/presentation/resources/resources.dart';
 
@@ -11,8 +11,11 @@ import '../../../../presentation.dart';
 
 class ItemListView extends StatelessWidget {
   const ItemListView({
-    super.key,
-  });
+    Key? key,
+    this.isReadOnly = false,
+  }) : super(key: key);
+
+  final bool isReadOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +33,6 @@ class ItemListView extends StatelessWidget {
               previous.currentInvoice.items != current.currentInvoice.items,
           builder: (context, state) {
             final items = state.currentInvoice.items;
-            print(items);
             return ListView.separated(
               key: UniqueKey(),
               shrinkWrap: true,
@@ -50,6 +52,7 @@ class ItemListView extends StatelessWidget {
                                 itemName: value!,
                               );
                         },
+                        isReadOnly: isReadOnly,
                       ),
                     ),
                     8.horizontalSpace,
@@ -66,6 +69,7 @@ class ItemListView extends StatelessWidget {
                                 quantityStr: value!,
                               );
                         },
+                        isReadOnly: isReadOnly,
                       ),
                     ),
                     8.horizontalSpace,
@@ -80,6 +84,7 @@ class ItemListView extends StatelessWidget {
                                 priceStr: value!,
                               );
                         },
+                        isReadOnly: isReadOnly,
                       ),
                     ),
                     8.horizontalSpace,
@@ -90,20 +95,22 @@ class ItemListView extends StatelessWidget {
                         initialText: (item.total ?? '').toString(),
                       ),
                     ),
-                    8.horizontalSpace,
-                    Expanded(
-                      flex: 1,
-                      child: Center(
-                        child: GestureDetector(
-                          onTap: () {
-                            getIt
-                                .get<InvoicesControllerCubit>()
-                                .removeItem(index);
-                          },
-                          child: Assets.icons.iconDelete.svg(),
+                    if (!isReadOnly) ...[
+                      8.horizontalSpace,
+                      Expanded(
+                        flex: 1,
+                        child: Center(
+                          child: GestureDetector(
+                            onTap: () {
+                              getIt
+                                  .get<InvoicesControllerCubit>()
+                                  .removeItem(index);
+                            },
+                            child: Assets.icons.iconDelete.svg(),
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ],
                 );
               },
@@ -112,21 +119,44 @@ class ItemListView extends StatelessWidget {
             );
           },
         ),
-        24.verticalSpace,
-        CustomButton(
-          onTap: () {
-            getIt.get<InvoicesControllerCubit>().addNewItem();
-          },
-          backgroundColor: context.colors.backgroundSecondary,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+        if (!isReadOnly) ...[
+          24.verticalSpace,
+          CustomButton(
+            onTap: () {
+              getIt.get<InvoicesControllerCubit>().addNewItem();
+            },
+            backgroundColor: context.colors.backgroundSecondary,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Assets.icons.iconPlus.svg(),
+                4.horizontalSpace,
+                const Text('Add New Item'),
+              ],
+            ),
+          ),
+        ],
+        if (isReadOnly) ...[
+          16.verticalSpace,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Assets.icons.iconPlus.svg(),
-              4.horizontalSpace,
-              const Text('Add New Item'),
+              const Text(
+                'Amount Due',
+                style: AppTextStyles.h2,
+              ),
+              BlocBuilder<InvoicesControllerCubit, InvoicesControllerState>(
+                bloc: getIt.get<InvoicesControllerCubit>(),
+                builder: (context, state) {
+                  return Text(
+                    '£ ${state.currentInvoice.total}',
+                    style: AppTextStyles.h2,
+                  );
+                },
+              ),
             ],
           ),
-        ),
+        ],
       ],
     );
   }
@@ -154,11 +184,13 @@ class ItemListView extends StatelessWidget {
           flex: 3,
           child: Text('Total'),
         ),
-        8.horizontalSpace,
-        const Expanded(
-          flex: 1,
-          child: SizedBox.shrink(),
-        ),
+        if (!isReadOnly) ...[
+          8.horizontalSpace,
+          const Expanded(
+            flex: 1,
+            child: SizedBox.shrink(),
+          ),
+        ],
       ],
     );
   }

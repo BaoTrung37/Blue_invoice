@@ -32,15 +32,19 @@ class Invoice with _$Invoice {
   @Index()
   DateTime? get paymentDue => createdAt?.add(Duration(days: paymentTerms));
 
-  // @ignore
-  // PaymentTermsType? get paymentTermsType => PaymentTermsType.values
-  //     .firstWhereOrNull((element) => element.timePlus == paymentTerms);
+  @override
+  @Index()
+  double get total => items.fold<double>(0, (previousValue, element) {
+        return previousValue + (element.total ?? 0);
+      });
 
   @enumerated
   InvoiceStatusType get invoiceStatus =>
       InvoiceStatusType.values.firstWhereOrNull(
           (element) => element.name.toLowerCase() == status.toLowerCase()) ??
       InvoiceStatusType.daft;
+
+  bool get isNotFieldBlank => true;
 
   factory Invoice.fromJson(Map<String, dynamic> json) =>
       _$InvoiceFromJson(json);
@@ -69,6 +73,8 @@ class Item with _$Item {
     int? quantity,
     double? price,
   }) = _Item;
+
+  bool get isNotFieldBlank => name != null && quantity != null && price != null;
 
   double? get total {
     if (price != null && quantity != null) {

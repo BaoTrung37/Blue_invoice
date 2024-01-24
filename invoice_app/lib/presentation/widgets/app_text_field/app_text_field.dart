@@ -69,6 +69,23 @@ class _AppTextFieldState extends State<AppTextField> {
     super.dispose();
   }
 
+  Widget _buildErrorText(
+    BuildContext context, {
+    required String error,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 2),
+      child: Text(
+        error,
+        style: AppTextStyles.body2.copyWith(color: Colors.red),
+      ),
+    );
+  }
+
+  String? get _errorMessage {
+    return _textFieldKey.currentState?.errorText;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -91,7 +108,10 @@ class _AppTextFieldState extends State<AppTextField> {
           child: Focus(
             onFocusChange: (focus) {
               if (!focus) {
-                widget.onFinishTextChanged?.call(_textController.text);
+                setState(() {
+                  widget.onFinishTextChanged?.call(_textController.text);
+                  _textFieldKey.currentState?.validate();
+                });
               }
             },
             child: TextFormField(
@@ -102,7 +122,13 @@ class _AppTextFieldState extends State<AppTextField> {
               readOnly: widget.isReadOnly,
               controller: _textController,
               onFieldSubmitted: widget.onSubmit,
-              validator: widget.validator,
+              validator: (value) {
+                if (value != null && value.isEmpty) {
+                  return 'Please the blank';
+                }
+                if (widget.validator != null) widget.validator!(value);
+                return null;
+              },
               focusNode: _focusNode,
               textInputAction: widget.textInputAction,
               keyboardType: widget.keyboardType,
@@ -110,6 +136,12 @@ class _AppTextFieldState extends State<AppTextField> {
               decoration: InputDecoration(
                 fillColor: context.colors.backgroundPrimary,
                 filled: widget.isReadOnly,
+                contentPadding: widget.isReadOnly
+                    ? EdgeInsets.zero
+                    : EdgeInsets.symmetric(
+                        vertical: 8.h,
+                        horizontal: 12.w,
+                      ),
                 border: const OutlineInputBorder(),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
@@ -127,11 +159,27 @@ class _AppTextFieldState extends State<AppTextField> {
                     width: 0.5,
                   ),
                 ),
+                errorStyle: const TextStyle(
+                  height: 0.01,
+                  color: Colors.transparent,
+                ),
                 errorBorder: InputBorder.none,
                 isDense: true,
               ),
             ),
           ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            if (_errorMessage != null)
+              Expanded(
+                child: _buildErrorText(
+                  context,
+                  error: _errorMessage!,
+                ),
+              ),
+          ],
         ),
       ],
     );

@@ -4,11 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:invoice_app/gen/assets.gen.dart';
 import 'package:invoice_app/injection/di.dart';
-import 'package:invoice_app/presentation/pages/home/cubit/invoices_controller_cubit.dart';
+import 'package:invoice_app/navigation/app_router.dart';
 import 'package:invoice_app/presentation/pages/home/screen/invoice_form.dart';
 import 'package:invoice_app/presentation/resources/app_colors.dart';
 import 'package:invoice_app/presentation/resources/app_text_styles.dart';
 
+import '../../../cubits/invoices/invoices_controller_cubit.dart';
 import '../widgets/invoice_item.dart';
 
 @RoutePage()
@@ -23,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    getIt.get<InvoicesControllerCubit>().initData();
+    getIt.get<InvoicesControllerCubit>().fetchData();
   }
 
   @override
@@ -148,23 +149,28 @@ class _MainContent extends StatelessWidget {
     final invoices = state.invoices;
     return Expanded(
       child: ListView.separated(
+        reverse: true,
         shrinkWrap: true,
         itemBuilder: (context, index) {
           return InvoiceItem(
             invoice: invoices[index],
             onTap: () {
+              // getIt
+              //     .get<InvoicesControllerCubit>()
+              //     .setCurrentInvoice(invoices[index]);
+              // showModalBottomSheet(
+              //   elevation: 2,
+              //   context: context,
+              //   scrollControlDisabledMaxHeightRatio: 1,
+              //   constraints: BoxConstraints(
+              //     maxHeight: MediaQuery.sizeOf(context).height * 0.7,
+              //   ),
+              //   builder: (context) => const InvoiceForm(),
+              // );
               getIt
                   .get<InvoicesControllerCubit>()
                   .setCurrentInvoice(invoices[index]);
-              showModalBottomSheet(
-                elevation: 2,
-                context: context,
-                scrollControlDisabledMaxHeightRatio: 1,
-                constraints: BoxConstraints(
-                  maxHeight: MediaQuery.sizeOf(context).height * 0.7,
-                ),
-                builder: (context) => const InvoiceForm(),
-              );
+              context.pushRoute(const InvoiceDetailRoute());
             },
           );
         },
@@ -175,35 +181,48 @@ class _MainContent extends StatelessWidget {
   }
 
   Widget _buildEmptyInvoiceList() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 40.w),
-      child: Column(
-        children: [
-          Assets.icons.illustrationEmpty.svg(height: 150.h),
-          24.verticalSpace,
-          const Text(
-            'There is nothing here',
-            style: AppTextStyles.h2,
-          ),
-          24.verticalSpace,
-          RichText(
-            text: TextSpan(
-              text: 'Create an invoice by click the ',
-              children: [
-                TextSpan(
-                  text: 'New Invoice ',
-                  style: AppTextStyles.body1.copyWith(
-                    color: const Color(0xFFCED3E9),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const TextSpan(text: 'button and get started'),
-              ],
-              style: AppTextStyles.body1,
+    return Expanded(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 40.w),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Assets.icons.illustrationEmpty.svg(height: 150.h),
+            24.verticalSpace,
+            const Text(
+              'There is nothing here',
+              style: AppTextStyles.h2,
             ),
-            textAlign: TextAlign.center,
-          ),
-        ],
+            24.verticalSpace,
+            RichText(
+              text: TextSpan(
+                text: 'Create an invoice by click the ',
+                children: [
+                  TextSpan(
+                    text: 'New Invoice ',
+                    style: AppTextStyles.body1.copyWith(
+                      color: const Color(0xFFCED3E9),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const TextSpan(text: 'button and get started'),
+                ],
+                style: AppTextStyles.body1,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            16.verticalSpace,
+            ElevatedButton(
+              onPressed: () {
+                getIt.get<InvoicesControllerCubit>().importMockData();
+              },
+              child: const Text(
+                'Import Fake data',
+                style: AppTextStyles.h2,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

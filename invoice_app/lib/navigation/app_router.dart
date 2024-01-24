@@ -15,6 +15,7 @@ class AppRouter extends _$AppRouter {
           initial: true,
           children: [
             AutoRoute(page: HomeRoute.page, initial: true),
+            AutoRoute(page: InvoiceDetailRoute.page),
           ],
         ),
       ];

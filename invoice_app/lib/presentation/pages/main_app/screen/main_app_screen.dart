@@ -1,9 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:invoice_app/data/local/isar_db/isar_database.dart';
 import 'package:invoice_app/gen/assets.gen.dart';
-import 'package:invoice_app/injection/di.dart';
 import 'package:invoice_app/presentation/resources/app_colors.dart';
 
 @RoutePage()
@@ -42,12 +40,7 @@ class _BottomBarView extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: Row(
               children: [
-                GestureDetector(
-                  onTap: () {
-                    getIt.get<IsarDatabase>().importJson();
-                  },
-                  child: Assets.icons.iconSun.svg(height: 24.h),
-                ),
+                Assets.icons.iconSun.svg(height: 24.h),
                 16.horizontalSpace,
                 VerticalDivider(
                   color: context.colors.action,

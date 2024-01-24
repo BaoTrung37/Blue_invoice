@@ -63,10 +63,18 @@ class IsarDatabase implements IsarDatabaseRepository {
   }
 
   @override
-  Future<bool> updateInvoiceById(int id, Invoice invoice) async {
+  Future<bool> updateInvoice(Invoice invoice) async {
     return await isar.writeTxn(() async {
       await isar.invoices.put(invoice);
-      await isar.invoices.delete(id);
+      await deleteInvoiceById(invoice.id);
+      return true;
+    });
+  }
+
+  @override
+  Future<bool> deleteInvoiceById(String id) async {
+    return await isar.writeTxn(() async {
+      await isar.invoices.deleteById(id);
       return true;
     });
   }

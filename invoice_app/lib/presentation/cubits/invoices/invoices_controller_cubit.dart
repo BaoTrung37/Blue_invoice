@@ -1,9 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:invoice_app/data/local/isar_db/isar_database.dart';
 import 'package:invoice_app/data/model/invoice.dart';
 import 'package:invoice_app/domain/use_cases/invoices/invoices.dart';
+import 'package:invoice_app/injection/di.dart';
 import 'package:invoice_app/presentation/presentation.dart';
 
 part 'invoices_controller_cubit.freezed.dart';
@@ -12,18 +15,22 @@ part 'invoices_controller_state.dart';
 @lazySingleton
 class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
   InvoicesControllerCubit(
-    this.getAllInvoicesUseCase,
-    this.addNewInvoiceUseCase,
+    this._getAllInvoicesUseCase,
+    this._addNewInvoiceUseCase,
+    this._deleteInvoiceByIdUseCase,
+    this._updateInvoiceUseCase,
   ) : super(const InvoicesControllerState());
 
-  final GetAllInvoicesUseCase getAllInvoicesUseCase;
-  final AddNewInvoiceUseCase addNewInvoiceUseCase;
+  final GetAllInvoicesUseCase _getAllInvoicesUseCase;
+  final AddNewInvoiceUseCase _addNewInvoiceUseCase;
+  final DeleteInvoiceByIdUseCase _deleteInvoiceByIdUseCase;
+  final UpdateInvoiceUseCase _updateInvoiceUseCase;
 
-  Future<void> initData() async {
+  Future<void> fetchData() async {
     try {
       emit(state.copyWith(loadingStatus: LoadingStatus.process));
 
-      final invoices = await getAllInvoicesUseCase.run();
+      final invoices = await _getAllInvoicesUseCase.run();
 
       emit(state.copyWith(
         loadingStatus: LoadingStatus.success,
@@ -34,17 +41,25 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
     }
   }
 
+  Future<void> importMockData() async {
+    await getIt.get<IsarDatabase>().importJson();
+    fetchData();
+  }
+
   void setCurrentInvoice(Invoice invoice) {
     emit(state.copyWith(currentInvoice: invoice));
   }
 
-  Future<bool> addInvoiceToDb() async {
+  Future<bool> addInvoiceToDb(bool isFilled) async {
+    final status =
+        isFilled ? InvoiceStatusType.pending.name : InvoiceStatusType.daft.name;
     try {
       final currentInvoice = state.currentInvoice.copyWith(
-        status: InvoiceStatusType.daft.name,
+        status: status,
+        createdAt: state.currentInvoice.createdAt ?? DateTime.now(),
       );
 
-      final isAddSuccess = await addNewInvoiceUseCase.run(currentInvoice);
+      final isAddSuccess = await _addNewInvoiceUseCase.run(currentInvoice);
       if (isAddSuccess) {
         emit(
           state.copyWith(
@@ -62,7 +77,7 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
   }
 
   Future<void> refreshTemplateData() async {
-    await initData();
+    await fetchData();
     clearTemplateData();
   }
 
@@ -314,6 +329,30 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
           ),
         ),
       );
+    }
+  }
+
+  Future<bool> updateInvoice(Invoice invoice) async {
+    try {
+      // return await deleteInvoiceByIdUseCase.run(id);
+      return true;
+    } catch (e) {
+      debugPrint(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> deleteInvoice(String id) async {
+    try {
+      final isDeleteSuccess = await _deleteInvoiceByIdUseCase.run(id);
+      if (isDeleteSuccess) {
+        await fetchData();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      debugPrint(e.toString());
+      return false;
     }
   }
 }

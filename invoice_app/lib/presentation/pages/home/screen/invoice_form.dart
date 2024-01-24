@@ -1,15 +1,16 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:invoice_app/injection/di.dart';
-import 'package:invoice_app/presentation/pages/home/cubit/invoices_controller_cubit.dart';
-import 'package:invoice_app/presentation/pages/home/screen/views/invoice_bottom_bar.dart';
 import 'package:invoice_app/presentation/pages/home/screen/views/payment_due_to_time_view.dart';
 import 'package:invoice_app/presentation/presentation.dart';
 import 'package:invoice_app/presentation/resources/app_colors.dart';
 import 'package:invoice_app/presentation/resources/app_text_styles.dart';
+import 'package:invoice_app/presentation/widgets/dialog/app_dialog.dart';
 
+import '../widgets/widgets.dart';
 import 'views/item_list_view.dart';
 
 class InvoiceForm extends StatefulWidget {
@@ -27,13 +28,95 @@ class _InvoiceFormState extends State<InvoiceForm> {
     _keyForm = GlobalKey<FormState>();
   }
 
+  bool validateForm() {
+    if (_keyForm.currentState?.validate() == false) {
+      return false;
+    }
+    return true;
+  }
+
+  void onAddInvoiceToDb() async {
+    final isValidate = validateForm();
+    if (isValidate) {
+      getIt.get<InvoicesControllerCubit>().addInvoiceToDb(true).then(
+            (value) => context.popRoute(),
+          );
+    } else {
+      showAppDialog(
+        context,
+        title: 'Confirmation',
+        content:
+            'You haven\'t filled in all the information. Please filled the form.',
+        actions: [
+          ActionAppDialog(
+            actionDialogTitle: 'OK',
+            onAction: (context) async {
+              context.popRoute();
+            },
+          ),
+        ],
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: context.colors.backgroundPrimary,
       body: _MainContent(keyForm: _keyForm),
-      bottomNavigationBar: const InvoiceBottomBar(),
+      bottomNavigationBar: _buildBottomBar(context, onAddInvoiceToDb),
+    );
+  }
+
+  Widget _buildBottomBar(BuildContext context, VoidCallback onTapSave) {
+    return Container(
+      padding: EdgeInsets.only(bottom: 16.h),
+      height: 60.h,
+      width: double.infinity,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          CustomButton(
+            backgroundColor: const Color(0xFFF9FAFE),
+            onTap: () {
+              getIt.get<InvoicesControllerCubit>().refreshTemplateData().then(
+                    (value) => Navigator.of(context).pop(),
+                  );
+            },
+            child: Text(
+              'Discard',
+              style: AppTextStyles.hs3.copyWith(
+                color: const Color(0xFF828DC5),
+              ),
+            ),
+          ),
+          CustomButton(
+            onTap: () {
+              getIt.get<InvoicesControllerCubit>().addInvoiceToDb(false).then(
+                    (value) => context.popRoute(),
+                  );
+            },
+            backgroundColor: const Color(0xFF373B54),
+            child: Text(
+              'Save as Daft',
+              style: AppTextStyles.hs3.copyWith(
+                color: const Color(0xFFDEE3F9),
+              ),
+            ),
+          ),
+          CustomButton(
+            onTap: onTapSave,
+            backgroundColor: const Color(0xFF7C5DF9),
+            child: Text(
+              'Save & Send',
+              style: AppTextStyles.hs3.copyWith(
+                color: const Color(0xFFFEFEFF),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -96,7 +179,7 @@ class _MainContent extends StatelessWidget {
             const Text('Bill Form', style: AppTextStyles.h3),
             16.verticalSpace,
             AppTextField(
-              title: 'Stress Address',
+              title: 'Street Address',
               initialText: state.currentInvoice.senderAddress.street,
               onTextChange: (value) {
                 getIt<InvoicesControllerCubit>().changedBillFromAddress(value!);
