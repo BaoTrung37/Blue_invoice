@@ -152,9 +152,11 @@ class _InvoiceFormState extends State<InvoiceForm> {
           ),
           CustomButton(
             onTap: () {
-              getIt.get<InvoicesControllerCubit>().updateInvoice().then(
-                    (value) => context.popRoute(),
-                  );
+              if (checkValidateForm()) {
+                getIt.get<InvoicesControllerCubit>().updateInvoice().then(
+                      (value) => context.popRoute(),
+                    );
+              }
             },
             backgroundColor: context.colors.button2Color,
             child: Text(
@@ -205,7 +207,7 @@ class _MainContent extends StatelessWidget {
                       24.verticalSpace,
                       _buildBillTo(),
                       24.verticalSpace,
-                      const ItemListView(),
+                      const ItemListView(isEdit: true),
                     ],
                   ),
                 ),
