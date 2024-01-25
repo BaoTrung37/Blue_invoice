@@ -53,6 +53,12 @@ class IsarDatabase implements IsarDatabaseRepository {
   }
 
   @override
+  Future<Invoice?> getInvoiceById(String invoiceId) async {
+    final invoice = await isar.invoices.getById(invoiceId);
+    return invoice;
+  }
+
+  @override
   Future<bool> addNewInvoice(Invoice invoice) async {
     return await isar.writeTxn(() async {
       final id = invoice.id.isEmpty ? _randomId : invoice.id;
@@ -65,8 +71,8 @@ class IsarDatabase implements IsarDatabaseRepository {
   @override
   Future<bool> updateInvoice(Invoice invoice) async {
     return await isar.writeTxn(() async {
-      await isar.invoices.put(invoice);
-      await deleteInvoiceById(invoice.id);
+      await isar.invoices.deleteById(invoice.id);
+      await isar.invoices.putByIndex('id', invoice);
       return true;
     });
   }

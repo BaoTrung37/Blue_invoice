@@ -8,14 +8,14 @@ import '../widgets.dart';
 class InvoiceStatusButton extends StatelessWidget {
   const InvoiceStatusButton({
     Key? key,
-    this.invoiceStatusType = InvoiceStatusType.daft,
+    this.invoiceStatusType = InvoiceStatusType.draft,
   }) : super(key: key);
 
   final InvoiceStatusType invoiceStatusType;
 
   Color _getTextColor() {
     switch (invoiceStatusType) {
-      case InvoiceStatusType.daft:
+      case InvoiceStatusType.draft:
         return const Color(0xFFDFE3F9);
       case InvoiceStatusType.pending:
         return const Color(0xFFF78E05);
@@ -26,7 +26,7 @@ class InvoiceStatusButton extends StatelessWidget {
 
   Color _getBackgroundColor() {
     switch (invoiceStatusType) {
-      case InvoiceStatusType.daft:
+      case InvoiceStatusType.draft:
         return const Color(0xFF2A2C43);
       case InvoiceStatusType.pending:
         return const Color(0xFF2C2735);

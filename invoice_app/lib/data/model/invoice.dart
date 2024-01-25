@@ -14,7 +14,7 @@ part 'invoice.g.dart';
 class Invoice with _$Invoice {
   const Invoice._();
   const factory Invoice({
-    @Index(unique: true) @Default('') String id,
+    @Index(unique: true, replace: true) @Default('') String id,
     @Default('') String description,
     @Default('') String clientName,
     @Default('') String clientEmail,
@@ -27,7 +27,7 @@ class Invoice with _$Invoice {
     @Default([]) List<Item> items,
   }) = _InvoiceCollection;
 
-  Id get invoiceId => Isar.autoIncrement;
+  Id get isarId => Isar.autoIncrement;
 
   @Index()
   DateTime? get paymentDue => createdAt?.add(Duration(days: paymentTerms));
@@ -42,9 +42,7 @@ class Invoice with _$Invoice {
   InvoiceStatusType get invoiceStatus =>
       InvoiceStatusType.values.firstWhereOrNull(
           (element) => element.name.toLowerCase() == status.toLowerCase()) ??
-      InvoiceStatusType.daft;
-
-  bool get isNotFieldBlank => true;
+      InvoiceStatusType.draft;
 
   factory Invoice.fromJson(Map<String, dynamic> json) =>
       _$InvoiceFromJson(json);

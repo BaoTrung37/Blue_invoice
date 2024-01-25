@@ -13,9 +13,11 @@ class ItemListView extends StatelessWidget {
   const ItemListView({
     Key? key,
     this.isReadOnly = false,
+    this.isEdit = false,
   }) : super(key: key);
 
   final bool isReadOnly;
+  final bool isEdit;
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +31,10 @@ class ItemListView extends StatelessWidget {
         8.verticalSpace,
         BlocBuilder<InvoicesControllerCubit, InvoicesControllerState>(
           bloc: getIt.get<InvoicesControllerCubit>(),
-          buildWhen: (previous, current) =>
-              previous.currentInvoice.items != current.currentInvoice.items,
           builder: (context, state) {
-            final items = state.currentInvoice.items;
+            final items = isEdit && !isReadOnly
+                ? state.temporaryInvoice.items
+                : state.currentInvoice.items;
             return ListView.separated(
               key: UniqueKey(),
               shrinkWrap: true,

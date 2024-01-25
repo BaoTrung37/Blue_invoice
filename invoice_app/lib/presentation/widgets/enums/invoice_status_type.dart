@@ -1,5 +1,5 @@
 enum InvoiceStatusType {
-  daft,
+  draft,
   pending,
   paid,
 }
@@ -7,8 +7,8 @@ enum InvoiceStatusType {
 extension InvoiceStatusTypeEx on InvoiceStatusType {
   String get name {
     switch (this) {
-      case InvoiceStatusType.daft:
-        return 'Daft';
+      case InvoiceStatusType.draft:
+        return 'Draft';
       case InvoiceStatusType.pending:
         return 'Pending';
       case InvoiceStatusType.paid:

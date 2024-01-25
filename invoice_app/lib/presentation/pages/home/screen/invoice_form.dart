@@ -8,14 +8,34 @@ import 'package:invoice_app/presentation/pages/home/screen/views/payment_due_to_
 import 'package:invoice_app/presentation/presentation.dart';
 import 'package:invoice_app/presentation/resources/app_colors.dart';
 import 'package:invoice_app/presentation/resources/app_text_styles.dart';
-import 'package:invoice_app/presentation/widgets/dialog/app_dialog.dart';
 
 import '../widgets/widgets.dart';
 import 'views/item_list_view.dart';
 
-class InvoiceForm extends StatefulWidget {
-  const InvoiceForm({super.key});
+void showInvoiceFormBottomSheet(
+  BuildContext context, {
+  bool isEdit = false,
+}) {
+  showModalBottomSheet(
+    elevation: 2,
+    context: context,
+    scrollControlDisabledMaxHeightRatio: 1,
+    constraints: BoxConstraints(
+      maxHeight: MediaQuery.sizeOf(context).height * 0.7,
+    ),
+    builder: (context) => InvoiceForm(
+      isEdit: isEdit,
+    ),
+  );
+}
 
+class InvoiceForm extends StatefulWidget {
+  const InvoiceForm({
+    Key? key,
+    this.isEdit = false,
+  }) : super(key: key);
+
+  final bool isEdit;
   @override
   State<InvoiceForm> createState() => _InvoiceFormState();
 }
@@ -28,48 +48,33 @@ class _InvoiceFormState extends State<InvoiceForm> {
     _keyForm = GlobalKey<FormState>();
   }
 
-  bool validateForm() {
+  bool checkValidateForm() {
     if (_keyForm.currentState?.validate() == false) {
       return false;
     }
     return true;
   }
 
-  void onAddInvoiceToDb() async {
-    final isValidate = validateForm();
-    if (isValidate) {
-      getIt.get<InvoicesControllerCubit>().addInvoiceToDb(true).then(
-            (value) => context.popRoute(),
-          );
-    } else {
-      showAppDialog(
-        context,
-        title: 'Confirmation',
-        content:
-            'You haven\'t filled in all the information. Please filled the form.',
-        actions: [
-          ActionAppDialog(
-            actionDialogTitle: 'OK',
-            onAction: (context) async {
-              context.popRoute();
-            },
-          ),
-        ],
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: context.colors.backgroundPrimary,
-      body: _MainContent(keyForm: _keyForm),
-      bottomNavigationBar: _buildBottomBar(context, onAddInvoiceToDb),
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: context.colors.backgroundPrimary,
+        body: _MainContent(keyForm: _keyForm),
+        bottomNavigationBar: _buildBottomBar(context),
+      ),
     );
   }
 
-  Widget _buildBottomBar(BuildContext context, VoidCallback onTapSave) {
+  Widget _buildBottomBar(BuildContext context) {
+    return widget.isEdit
+        ? _buildEditHandleView(context)
+        : _buildCreateHandleView(context);
+  }
+
+  Widget _buildCreateHandleView(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(bottom: 16.h),
       height: 60.h,
@@ -93,25 +98,74 @@ class _InvoiceFormState extends State<InvoiceForm> {
           ),
           CustomButton(
             onTap: () {
-              getIt.get<InvoicesControllerCubit>().addInvoiceToDb(false).then(
+              getIt
+                  .get<InvoicesControllerCubit>()
+                  .addInvoiceToDb(isDraft: true)
+                  .then(
                     (value) => context.popRoute(),
                   );
             },
             backgroundColor: const Color(0xFF373B54),
             child: Text(
-              'Save as Daft',
+              'Save as Draft',
               style: AppTextStyles.hs3.copyWith(
                 color: const Color(0xFFDEE3F9),
               ),
             ),
           ),
           CustomButton(
-            onTap: onTapSave,
+            onTap: () {
+              getIt.get<InvoicesControllerCubit>().addInvoiceToDb().then(
+                    (value) => context.popRoute(),
+                  );
+            },
             backgroundColor: const Color(0xFF7C5DF9),
             child: Text(
               'Save & Send',
               style: AppTextStyles.hs3.copyWith(
                 color: const Color(0xFFFEFEFF),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEditHandleView(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(bottom: 16.h),
+      height: 60.h,
+      width: double.infinity,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          CustomButton(
+            backgroundColor: const Color(0xFFF9FAFE),
+            onTap: () {
+              getIt.get<InvoicesControllerCubit>().discardTemporaryChanged();
+              context.popRoute();
+            },
+            child: Text(
+              'Cancel',
+              style: AppTextStyles.hs3.copyWith(
+                color: const Color(0xFF828DC5),
+              ),
+            ),
+          ),
+          CustomButton(
+            onTap: () {
+              if (checkValidateForm()) {
+                getIt.get<InvoicesControllerCubit>().updateInvoice().then(
+                      (value) => context.popRoute(),
+                    );
+              }
+            },
+            backgroundColor: context.colors.button2Color,
+            child: Text(
+              'Save changed',
+              style: AppTextStyles.hs3.copyWith(
+                color: const Color(0xFFDEE3F9),
               ),
             ),
           ),
@@ -143,22 +197,16 @@ class _MainContent extends StatelessWidget {
             child: SingleChildScrollView(
               child: Form(
                 key: keyForm,
-                child: GestureDetector(
-                  onTap: () {
-                    FocusManager.instance.primaryFocus?.unfocus();
-                  },
-                  behavior: HitTestBehavior.translucent,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      _buildBillFrom(),
-                      24.verticalSpace,
-                      _buildBillTo(),
-                      24.verticalSpace,
-                      const ItemListView(),
-                    ],
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildBillFrom(),
+                    24.verticalSpace,
+                    _buildBillTo(),
+                    24.verticalSpace,
+                    const ItemListView(isEdit: true),
+                  ],
                 ),
               ),
             ),
