@@ -309,9 +309,21 @@ class _InvoiceFormState extends State<InvoiceForm> {
           ),
           CustomButton(
             onTap: () {
-              getIt.get<InvoicesControllerCubit>().addInvoiceToDb().then(
-                    (value) => context.popRoute(),
-                  );
+              if (checkValidateForm()) {
+                getIt.get<InvoicesControllerCubit>().addInvoiceToDb().then(
+                      (value) => context.popRoute(),
+                    );
+              } else {
+                Fluttertoast.showToast(
+                  msg: "Please fill in all information before saving.",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.red,
+                  textColor: Colors.white,
+                  fontSize: 16.0,
+                );
+              }
             },
             backgroundColor: const Color(0xFF7C5DF9),
             child: Text(
