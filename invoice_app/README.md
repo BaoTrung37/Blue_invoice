@@ -1,16 +1,32 @@
-# invoice_app
+# invoice_app      
+Flutter SDK = 3.13.3             
+# Set up for Development     
+1. Make sure your computer and editor are ready for Flutter development        
+- https://docs.flutter.dev/get-started/editor 
+            
+IDE:                    
+- Android Studio
+- Visual Studio Code     
+           
+1. Import this project into your editor (ex: Android Studio, VS Code) 
 
-A new Flutter project.
+2. Install Fvm:
+   Following: https://fvm.app/docs/getting_started/installation
+     
+3. Access the project's folder on Terminal and run the following command on its root:
+```    
+fvm flutter pub get  
+fvm flutter packages pub run build_runner build --delete-conflicting-outputs
+```   
+4. Run app:
+```
+    fvm flutter run lib/main.dart
+```
 
-## Getting Started
+## Architecture & Development
 
-This project is a starting point for a Flutter application.
+Based on Clean Architecture.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Dependency Injection
+- Use [GetIt](https://pub.dev/packages/get_it) for repository and use case
+- Use [Bloc](https://pub.dev/packages/flutter_bloc) for state management
