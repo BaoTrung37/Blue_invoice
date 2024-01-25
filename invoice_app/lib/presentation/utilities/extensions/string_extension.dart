@@ -3,7 +3,7 @@ extension StringExtension1 on String {
     try {
       return int.parse(this);
     } catch (e) {
-      return 0;
+      return null;
     }
   }
 
@@ -11,7 +11,7 @@ extension StringExtension1 on String {
     try {
       return double.parse(this);
     } catch (e) {
-      return 0;
+      return null;
     }
   }
 }

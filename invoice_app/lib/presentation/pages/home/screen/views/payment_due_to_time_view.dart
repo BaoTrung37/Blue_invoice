@@ -16,69 +16,77 @@ class PaymentDueToTimeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Issue Date',
-                style: AppTextStyles.h3,
-              ),
-              8.verticalSpace,
-              GestureDetector(
-                child: BlocBuilder<InvoicesControllerCubit,
-                    InvoicesControllerState>(
-                  bloc: getIt.get<InvoicesControllerCubit>(),
-                  builder: (context, state) {
-                    return _buildCreateTimePicker(
-                      context,
-                      state: state,
-                      onTap: () async {
-                        final dateTime = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate:
-                              DateTime.now().subtract(const Duration(days: 30)),
-                          lastDate: DateTime.now().add(
-                            const Duration(days: 30),
-                          ),
-                        );
-                        if (dateTime != null) {
-                          getIt
-                              .get<InvoicesControllerCubit>()
-                              .changedBillToClientCreateAt(dateTime);
-                        }
-                      },
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
+        _buildIssueDateView(),
         16.horizontalSpace,
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Payment Terms',
-                style: AppTextStyles.h3,
-              ),
-              8.verticalSpace,
-              GestureDetector(
-                child: BlocBuilder<InvoicesControllerCubit,
-                    InvoicesControllerState>(
-                  bloc: getIt.get<InvoicesControllerCubit>(),
-                  builder: (context, state) {
-                    return _buildPaymentTermDropdown(context, state);
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
+        _buildPaymentTermsView(),
       ],
+    );
+  }
+
+  Widget _buildPaymentTermsView() {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Payment Terms',
+            style: AppTextStyles.h3,
+          ),
+          8.verticalSpace,
+          GestureDetector(
+            child:
+                BlocBuilder<InvoicesControllerCubit, InvoicesControllerState>(
+              bloc: getIt.get<InvoicesControllerCubit>(),
+              builder: (context, state) {
+                return _buildPaymentTermDropdown(context, state);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildIssueDateView() {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Issue Date',
+            style: AppTextStyles.h3,
+          ),
+          8.verticalSpace,
+          GestureDetector(
+            child:
+                BlocBuilder<InvoicesControllerCubit, InvoicesControllerState>(
+              bloc: getIt.get<InvoicesControllerCubit>(),
+              builder: (context, state) {
+                return _buildCreateTimePicker(
+                  context,
+                  state: state,
+                  onTap: () async {
+                    final dateTime = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate:
+                          DateTime.now().subtract(const Duration(days: 30)),
+                      lastDate: DateTime.now().add(
+                        const Duration(days: 30),
+                      ),
+                    );
+                    if (dateTime != null) {
+                      getIt
+                          .get<InvoicesControllerCubit>()
+                          .changedBillToClientCreateAt(dateTime);
+                    }
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 
