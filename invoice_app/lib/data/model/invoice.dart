@@ -22,7 +22,6 @@ class Invoice with _$Invoice {
     @Default(Address()) Address senderAddress,
     @Default(Address()) Address clientAddress,
     @Default(1) int paymentTerms,
-    @Default(0) double total,
     DateTime? createdAt,
     @Default([]) List<Item> items,
   }) = _InvoiceCollection;
@@ -32,7 +31,6 @@ class Invoice with _$Invoice {
   @Index()
   DateTime? get paymentDue => createdAt?.add(Duration(days: paymentTerms));
 
-  @override
   @Index()
   double get total => items.fold<double>(0, (previousValue, element) {
         return previousValue + (element.total ?? 0);
