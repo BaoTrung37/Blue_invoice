@@ -9,18 +9,13 @@
             "request": "launch",
             "program": "lib/main.dart",
             "type": "dart",
-            // "args": [
-            //     "--flavor", "dev",
-            // ],
         },
         {
             "name": "dev (profile mode)",
             "request": "launch",
-            "program": "lib/main_dev.dart",
+            "program": "lib/main.dart",
             "type": "dart",
-            // "args": [
-            //     "--flavor", "dev",
-            // ],
+
             "flutterMode": "profile"
         },
         {
@@ -28,39 +23,8 @@
             "request": "launch",
             "program": "lib/main.dart",
             "type": "dart",
-            // "args": [
-            //     "--flavor", "dev",
-            // ],
             "flutterMode": "release"
         },
-        // {
-        //     "name": "ss_remote -prod",
-        //     "request": "launch",
-        //     "program": "lib/main_dev.dart",
-        //     "type": "dart",
-        //     "args": [
-        //         "--flavor", "prod",
-        //     ],
-        // },
-        // {
-        //     "name": "ss_remote -prod (profile mode)",
-        //     "request": "launch",
-        //     "program": "lib/main.dart",
-        //     "type": "dart",
-        //     "args": [
-        //         "--flavor", "prod",
-        //     ],
-        //     "flutterMode": "profile"
-        // },
-        // {
-        //     "name": "ss_remote -prod (release mode)",
-        //     "request": "launch",
-        //     "program": "lib/main.dart",
-        //     "type": "dart",
-        //     "args": [
-        //         "--flavor", "prod",
-        //     ],
-        //     "flutterMode": "release"
-        // }
+        
     ]
 }
