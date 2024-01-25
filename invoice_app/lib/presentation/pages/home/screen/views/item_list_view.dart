@@ -32,7 +32,7 @@ class ItemListView extends StatelessWidget {
         BlocBuilder<InvoicesControllerCubit, InvoicesControllerState>(
           bloc: getIt.get<InvoicesControllerCubit>(),
           builder: (context, state) {
-            final items = isEdit
+            final items = isEdit && !isReadOnly
                 ? state.temporaryInvoice.items
                 : state.currentInvoice.items;
             return ListView.separated(

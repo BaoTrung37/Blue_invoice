@@ -68,7 +68,7 @@ class InvoicesControllerCubit extends Cubit<InvoicesControllerState> {
     final status =
         isDraft ? InvoiceStatusType.draft.name : InvoiceStatusType.pending.name;
     try {
-      final temporaryInvoice = state.currentInvoice.copyWith(
+      final temporaryInvoice = state.temporaryInvoice.copyWith(
         status: status,
         createdAt: state.temporaryInvoice.createdAt ?? DateTime.now(),
       );
