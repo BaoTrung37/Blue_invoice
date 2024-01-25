@@ -26,31 +26,38 @@ class InvoiceDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.colors.backgroundPrimary,
-      appBar: AppBar(
-        leading: GestureDetector(
-          onTap: () {
-            context.router.pop();
-          },
-          child: Center(
-            child: Assets.icons.iconArrowLeft.svg(
-              height: 20.h,
-            ),
+      appBar: _buildAppBar(context),
+      body: _buildBody(),
+      bottomNavigationBar: _buildBottomBar(),
+    );
+  }
+
+  Widget _buildBody() {
+    return BlocBuilder<InvoicesControllerCubit, InvoicesControllerState>(
+      bloc: getIt.get<InvoicesControllerCubit>()..setCurrentInvoice(invoiceId),
+      builder: (context, state) {
+        return LoadingView(
+          status: state.loadingStatus,
+          child: const _MainContent(),
+        );
+      },
+    );
+  }
+
+  AppBar _buildAppBar(BuildContext context) {
+    return AppBar(
+      leading: GestureDetector(
+        onTap: () {
+          context.router.pop();
+        },
+        child: Center(
+          child: Assets.icons.iconArrowLeft.svg(
+            height: 20.h,
           ),
         ),
-        backgroundColor: context.colors.backgroundPrimary,
-        title: const Text('Go back'),
       ),
-      body: BlocBuilder<InvoicesControllerCubit, InvoicesControllerState>(
-        bloc: getIt.get<InvoicesControllerCubit>()
-          ..setCurrentInvoice(invoiceId),
-        builder: (context, state) {
-          return LoadingView(
-            status: state.loadingStatus,
-            child: const _MainContent(),
-          );
-        },
-      ),
-      bottomNavigationBar: _buildBottomBar(),
+      backgroundColor: context.colors.backgroundPrimary,
+      title: const Text('Go back'),
     );
   }
 
@@ -65,71 +72,83 @@ class InvoiceDetailScreen extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              CustomButton(
-                onTap: () {
-                  showInvoiceFormBottomSheet(context, isEdit: true);
-                },
-                backgroundColor: const Color(0xFF373B54),
-                child: Text(
-                  'Edit',
-                  style: AppTextStyles.hs3.copyWith(
-                    color: const Color(0xFFDEE3F9),
-                  ),
-                ),
-              ),
-              CustomButton(
-                backgroundColor: const Color(0xFFEC5757),
-                onTap: () {
-                  showAppDialog(
-                    context,
-                    title: 'Confirm Deletion',
-                    content:
-                        'Are you sure you want to delete invoice #${state.currentInvoice.id}? This action cannot be undone.',
-                    actions: [
-                      ActionAppDialog(
-                        actionDialogTitle: 'Delete',
-                        onAction: (context) {
-                          getIt
-                              .get<InvoicesControllerCubit>()
-                              .deleteInvoice(state.currentInvoice.id)
-                              .then((value) {
-                            context.router
-                                .popUntilRouteWithName(HomeRoute.name);
-                          });
-                        },
-                      ),
-                      ActionAppDialog(
-                        actionDialogTitle: 'Cancel',
-                        onAction: (context) {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
-                  );
-                },
-                child: Text(
-                  'Delete',
-                  style: AppTextStyles.hs3.copyWith(
-                    color: const Color(0xFFFEFEFF),
-                  ),
-                ),
-              ),
-              CustomButton(
-                onTap: () {
-                  getIt.get<InvoicesControllerCubit>().makeInvoicePaid();
-                },
-                backgroundColor: const Color(0xFF7C5DF9),
-                child: Text(
-                  'Make as Paid',
-                  style: AppTextStyles.hs3.copyWith(
-                    color: const Color(0xFFFEFEFF),
-                  ),
-                ),
-              ),
+              _buildEditButton(context),
+              _buildDeleteButton(context, state),
+              _buildMakePaidButton(),
             ],
           ),
         );
       },
+    );
+  }
+
+  Widget _buildMakePaidButton() {
+    return CustomButton(
+      onTap: () {
+        getIt.get<InvoicesControllerCubit>().makeInvoicePaid();
+      },
+      backgroundColor: const Color(0xFF7C5DF9),
+      child: Text(
+        'Make as Paid',
+        style: AppTextStyles.hs3.copyWith(
+          color: const Color(0xFFFEFEFF),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDeleteButton(
+      BuildContext context, InvoicesControllerState state) {
+    return CustomButton(
+      backgroundColor: const Color(0xFFEC5757),
+      onTap: () {
+        showAppDialog(
+          context,
+          title: 'Confirm Deletion',
+          content:
+              'Are you sure you want to delete invoice #${state.currentInvoice.id}? This action cannot be undone.',
+          actions: [
+            ActionAppDialog(
+              actionDialogTitle: 'Delete',
+              onAction: (context) {
+                getIt
+                    .get<InvoicesControllerCubit>()
+                    .deleteInvoice(state.currentInvoice.id)
+                    .then((value) {
+                  context.router.popUntilRouteWithName(HomeRoute.name);
+                });
+              },
+            ),
+            ActionAppDialog(
+              actionDialogTitle: 'Cancel',
+              onAction: (context) {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+      child: Text(
+        'Delete',
+        style: AppTextStyles.hs3.copyWith(
+          color: const Color(0xFFFEFEFF),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEditButton(BuildContext context) {
+    return CustomButton(
+      onTap: () {
+        showInvoiceFormBottomSheet(context, isEdit: true);
+      },
+      backgroundColor: const Color(0xFF373B54),
+      child: Text(
+        'Edit',
+        style: AppTextStyles.hs3.copyWith(
+          color: const Color(0xFFDEE3F9),
+        ),
+      ),
     );
   }
 }
@@ -151,40 +170,11 @@ class _MainContent extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      const Text(
-                        'Status: ',
-                        style: AppTextStyles.h3,
-                      ),
-                      8.horizontalSpace,
-                      BlocBuilder<InvoicesControllerCubit,
-                          InvoicesControllerState>(
-                        bloc: getIt.get<InvoicesControllerCubit>(),
-                        builder: (context, state) {
-                          return InvoiceStatusButton(
-                            invoiceStatusType:
-                                state.currentInvoice.invoiceStatus,
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+                  _buildInvoiceStatus(),
                   _buildBillFrom(),
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 12.h),
-                    height: 1,
-                    width: double.infinity,
-                    color: Colors.white,
-                  ),
+                  _buildHorizontalDivider(),
                   _buildBillTo(),
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 12.h),
-                    height: 1,
-                    width: double.infinity,
-                    color: Colors.white,
-                  ),
+                  _buildHorizontalDivider(),
                   const ItemListView(isReadOnly: true),
                 ],
               ),
@@ -192,6 +182,36 @@ class _MainContent extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildInvoiceStatus() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        _buildHeadingTitle('Status: '),
+        8.horizontalSpace,
+        BlocBuilder<InvoicesControllerCubit, InvoicesControllerState>(
+          bloc: getIt.get<InvoicesControllerCubit>(),
+          builder: (context, state) {
+            return InvoiceStatusButton(
+              invoiceStatusType: state.currentInvoice.invoiceStatus,
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHeadingTitle(String title) =>
+      Text(title, style: AppTextStyles.h3);
+
+  Widget _buildHorizontalDivider() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 12.h),
+      height: 1,
+      width: double.infinity,
+      color: Colors.white,
     );
   }
 
@@ -203,7 +223,7 @@ class _MainContent extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Bill Form', style: AppTextStyles.h3),
+            _buildHeadingTitle('Bill From'),
             16.verticalSpace,
             AppTextField(
               title: 'Street Address',
@@ -252,7 +272,7 @@ class _MainContent extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Bill To', style: AppTextStyles.h3),
+            _buildHeadingTitle('Bill To'),
             16.verticalSpace,
             AppTextField(
               title: 'Client\'s Name',

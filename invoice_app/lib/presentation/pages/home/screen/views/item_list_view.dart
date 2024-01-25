@@ -29,137 +29,149 @@ class ItemListView extends StatelessWidget {
         16.verticalSpace,
         _buildHeadingTable(),
         8.verticalSpace,
-        BlocBuilder<InvoicesControllerCubit, InvoicesControllerState>(
-          bloc: getIt.get<InvoicesControllerCubit>(),
-          builder: (context, state) {
-            final items = isEdit && !isReadOnly
-                ? state.temporaryInvoice.items
-                : state.currentInvoice.items;
-            return ListView.separated(
-              key: UniqueKey(),
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                final item = items[index];
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      flex: 6,
-                      child: AppTextField(
-                        initialText: item.name,
-                        onFinishTextChanged: (value) {
-                          getIt.get<InvoicesControllerCubit>().updateItemName(
-                                index: index,
-                                itemName: value!,
-                              );
-                        },
-                        isReadOnly: isReadOnly,
-                      ),
-                    ),
-                    8.horizontalSpace,
-                    Expanded(
-                      flex: 2,
-                      child: AppTextField(
-                        initialText: (item.quantity ?? '').toString(),
-                        keyboardType: TextInputType.number,
-                        onFinishTextChanged: (value) {
-                          getIt
-                              .get<InvoicesControllerCubit>()
-                              .updateItemQuantity(
-                                index: index,
-                                quantityStr: value!,
-                              );
-                        },
-                        isReadOnly: isReadOnly,
-                      ),
-                    ),
-                    8.horizontalSpace,
-                    Expanded(
-                      flex: 3,
-                      child: AppTextField(
-                        initialText: (item.price ?? '').toString(),
-                        keyboardType: TextInputType.number,
-                        onFinishTextChanged: (value) {
-                          getIt.get<InvoicesControllerCubit>().updateItemPrice(
-                                index: index,
-                                priceStr: value!,
-                              );
-                        },
-                        isReadOnly: isReadOnly,
-                      ),
-                    ),
-                    8.horizontalSpace,
-                    Expanded(
-                      flex: 3,
-                      child: AppTextField(
-                        isReadOnly: true,
-                        initialText: (item.total ?? '').toString(),
-                      ),
-                    ),
-                    if (!isReadOnly) ...[
-                      8.horizontalSpace,
-                      Expanded(
-                        flex: 1,
-                        child: Center(
-                          child: GestureDetector(
-                            onTap: () {
-                              getIt
-                                  .get<InvoicesControllerCubit>()
-                                  .removeItem(index);
-                            },
-                            child: Assets.icons.iconDelete.svg(),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ],
-                );
-              },
-              itemCount: items.length,
-              separatorBuilder: (context, index) => 16.verticalSpace,
-            );
-          },
-        ),
+        _buildItemListView(),
         if (!isReadOnly) ...[
           24.verticalSpace,
-          CustomButton(
-            onTap: () {
-              getIt.get<InvoicesControllerCubit>().addNewItem();
-            },
-            backgroundColor: context.colors.backgroundSecondary,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Assets.icons.iconPlus.svg(),
-                4.horizontalSpace,
-                const Text('Add New Item'),
-              ],
-            ),
-          ),
+          _buildAddNewItemButton(context),
         ],
         if (isReadOnly) ...[
           16.verticalSpace,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Amount Due',
-                style: AppTextStyles.h2,
-              ),
-              BlocBuilder<InvoicesControllerCubit, InvoicesControllerState>(
-                bloc: getIt.get<InvoicesControllerCubit>(),
-                builder: (context, state) {
-                  return Text(
-                    '£ ${state.currentInvoice.total}',
-                    style: AppTextStyles.h2,
-                  );
-                },
-              ),
-            ],
-          ),
+          _buildAmountDueView(),
         ],
       ],
+    );
+  }
+
+  Widget _buildItemListView() {
+    return BlocBuilder<InvoicesControllerCubit, InvoicesControllerState>(
+      bloc: getIt.get<InvoicesControllerCubit>(),
+      builder: (context, state) {
+        final items = isEdit && !isReadOnly
+            ? state.temporaryInvoice.items
+            : state.currentInvoice.items;
+        return ListView.separated(
+          key: UniqueKey(),
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            final item = items[index];
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  flex: 6,
+                  child: AppTextField(
+                    initialText: item.name,
+                    onFinishTextChanged: (value) {
+                      getIt.get<InvoicesControllerCubit>().updateItemName(
+                            index: index,
+                            itemName: value!,
+                          );
+                    },
+                    isReadOnly: isReadOnly,
+                  ),
+                ),
+                8.horizontalSpace,
+                Expanded(
+                  flex: 2,
+                  child: AppTextField(
+                    initialText: (item.quantity ?? '').toString(),
+                    keyboardType: TextInputType.number,
+                    onFinishTextChanged: (value) {
+                      getIt.get<InvoicesControllerCubit>().updateItemQuantity(
+                            index: index,
+                            quantityStr: value!,
+                          );
+                    },
+                    isReadOnly: isReadOnly,
+                  ),
+                ),
+                8.horizontalSpace,
+                Expanded(
+                  flex: 3,
+                  child: AppTextField(
+                    initialText: (item.price ?? '').toString(),
+                    keyboardType: TextInputType.number,
+                    onFinishTextChanged: (value) {
+                      getIt.get<InvoicesControllerCubit>().updateItemPrice(
+                            index: index,
+                            priceStr: value!,
+                          );
+                    },
+                    isReadOnly: isReadOnly,
+                  ),
+                ),
+                8.horizontalSpace,
+                Expanded(
+                  flex: 3,
+                  child: AppTextField(
+                    isReadOnly: true,
+                    initialText: (item.total ?? '').toString(),
+                  ),
+                ),
+                if (!isReadOnly) ...[
+                  8.horizontalSpace,
+                  Expanded(
+                    flex: 1,
+                    child: _buildDeleteButton(index),
+                  ),
+                ],
+              ],
+            );
+          },
+          itemCount: items.length,
+          separatorBuilder: (context, index) => 16.verticalSpace,
+        );
+      },
+    );
+  }
+
+  Widget _buildAmountDueView() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          'Amount Due',
+          style: AppTextStyles.h2,
+        ),
+        BlocBuilder<InvoicesControllerCubit, InvoicesControllerState>(
+          bloc: getIt.get<InvoicesControllerCubit>(),
+          builder: (context, state) {
+            return Text(
+              '£ ${state.currentInvoice.total}',
+              style: AppTextStyles.h2,
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAddNewItemButton(BuildContext context) {
+    return CustomButton(
+      onTap: () {
+        getIt.get<InvoicesControllerCubit>().addNewItem();
+      },
+      backgroundColor: context.colors.backgroundSecondary,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Assets.icons.iconPlus.svg(),
+          4.horizontalSpace,
+          const Text('Add New Item'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDeleteButton(int index) {
+    return Center(
+      child: GestureDetector(
+        onTap: () {
+          getIt.get<InvoicesControllerCubit>().removeItem(index);
+        },
+        child: Assets.icons.iconDelete.svg(),
+      ),
     );
   }
 

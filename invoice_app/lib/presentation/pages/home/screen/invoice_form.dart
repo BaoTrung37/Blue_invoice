@@ -224,7 +224,7 @@ class _MainContent extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Bill Form', style: AppTextStyles.h3),
+            const Text('Bill From', style: AppTextStyles.h3),
             16.verticalSpace,
             AppTextField(
               title: 'Street Address',
