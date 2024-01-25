@@ -136,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 getIt.get<InvoicesControllerCubit>().importMockData();
               },
               child: const Text(
-                'Import Fake data',
+                'Import mock data',
                 style: AppTextStyles.h2,
               ),
             ),
