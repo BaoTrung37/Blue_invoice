@@ -112,11 +112,9 @@ class _AppTextFieldState extends State<AppTextField> {
               if (!focus) {
                 setState(() {
                   widget.onFinishTextChanged?.call(_textController.text);
-                });
-              }
-              if (widget.isCheckValidate) {
-                setState(() {
-                  _textFieldKey.currentState?.validate();
+                  if (widget.isCheckValidate) {
+                    _textFieldKey.currentState?.validate();
+                  }
                 });
               }
             },

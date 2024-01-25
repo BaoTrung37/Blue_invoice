@@ -47,6 +47,7 @@ class InvoiceDetailScreen extends StatelessWidget {
     return AppBar(
       leading: GestureDetector(
         onTap: () {
+          getIt.get<InvoicesControllerCubit>().fetchData();
           context.router.pop();
         },
         child: Center(
