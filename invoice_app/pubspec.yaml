@@ -116,7 +116,6 @@ flutter:
     - assets/images/
     - assets/json/
     - assets/fonts/
-    - assets/screenshots/
 
   fonts:
     - family: Spartan
