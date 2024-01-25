@@ -107,44 +107,6 @@ class $AssetsJsonGen {
   List<String> get values => [data];
 }
 
-class $AssetsScreenshotsGen {
-  const $AssetsScreenshotsGen();
-
-  /// File path: assets/screenshots/Screenshot_1706179127.png
-  AssetGenImage get screenshot1706179127 =>
-      const AssetGenImage('assets/screenshots/Screenshot_1706179127.png');
-
-  /// File path: assets/screenshots/Screenshot_1706179138.png
-  AssetGenImage get screenshot1706179138 =>
-      const AssetGenImage('assets/screenshots/Screenshot_1706179138.png');
-
-  /// File path: assets/screenshots/Screenshot_1706179149.png
-  AssetGenImage get screenshot1706179149 =>
-      const AssetGenImage('assets/screenshots/Screenshot_1706179149.png');
-
-  /// File path: assets/screenshots/Screenshot_1706179153.png
-  AssetGenImage get screenshot1706179153 =>
-      const AssetGenImage('assets/screenshots/Screenshot_1706179153.png');
-
-  /// File path: assets/screenshots/Screenshot_1706179155.png
-  AssetGenImage get screenshot1706179155 =>
-      const AssetGenImage('assets/screenshots/Screenshot_1706179155.png');
-
-  /// File path: assets/screenshots/Screenshot_1706179161.png
-  AssetGenImage get screenshot1706179161 =>
-      const AssetGenImage('assets/screenshots/Screenshot_1706179161.png');
-
-  /// List of all assets
-  List<AssetGenImage> get values => [
-        screenshot1706179127,
-        screenshot1706179138,
-        screenshot1706179149,
-        screenshot1706179153,
-        screenshot1706179155,
-        screenshot1706179161
-      ];
-}
-
 class Assets {
   Assets._();
 
@@ -152,7 +114,6 @@ class Assets {
   static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
   static const $AssetsJsonGen json = $AssetsJsonGen();
-  static const $AssetsScreenshotsGen screenshots = $AssetsScreenshotsGen();
 }
 
 class AssetGenImage {
