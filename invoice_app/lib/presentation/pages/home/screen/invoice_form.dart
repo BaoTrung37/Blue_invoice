@@ -57,11 +57,14 @@ class _InvoiceFormState extends State<InvoiceForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: context.colors.backgroundPrimary,
-      body: _MainContent(keyForm: _keyForm),
-      bottomNavigationBar: _buildBottomBar(context),
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: context.colors.backgroundPrimary,
+        body: _MainContent(keyForm: _keyForm),
+        bottomNavigationBar: _buildBottomBar(context),
+      ),
     );
   }
 
@@ -194,22 +197,16 @@ class _MainContent extends StatelessWidget {
             child: SingleChildScrollView(
               child: Form(
                 key: keyForm,
-                child: GestureDetector(
-                  onTap: () {
-                    FocusManager.instance.primaryFocus?.unfocus();
-                  },
-                  behavior: HitTestBehavior.translucent,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      _buildBillFrom(),
-                      24.verticalSpace,
-                      _buildBillTo(),
-                      24.verticalSpace,
-                      const ItemListView(isEdit: true),
-                    ],
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildBillFrom(),
+                    24.verticalSpace,
+                    _buildBillTo(),
+                    24.verticalSpace,
+                    const ItemListView(isEdit: true),
+                  ],
                 ),
               ),
             ),
