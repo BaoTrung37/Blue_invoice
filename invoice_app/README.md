@@ -40,6 +40,9 @@ Based on Clean Architecture.
 - Use [GetIt](https://pub.dev/packages/get_it) for repository and use case
 - Use [Bloc](https://pub.dev/packages/flutter_bloc) for state management
 
+## Database
+- Use [Isar](https://pub.dev/packages/isar) for database storage
+
 ## Screenshot
 
 <div align="center">
