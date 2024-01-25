@@ -22,6 +22,7 @@ class AppTextField extends StatefulWidget {
     this.width,
     this.isAutoDisposeController = true,
     this.isReadOnly = false,
+    this.isCheckValidate = true,
   }) : super(key: key);
 
   final FocusNode? focusNode;
@@ -40,6 +41,7 @@ class AppTextField extends StatefulWidget {
 
   final bool isAutoDisposeController;
   final bool isReadOnly;
+  final bool isCheckValidate;
 
   @override
   State<AppTextField> createState() => _AppTextFieldState();
@@ -110,6 +112,10 @@ class _AppTextFieldState extends State<AppTextField> {
               if (!focus) {
                 setState(() {
                   widget.onFinishTextChanged?.call(_textController.text);
+                });
+              }
+              if (widget.isCheckValidate) {
+                setState(() {
                   _textFieldKey.currentState?.validate();
                 });
               }
@@ -172,7 +178,7 @@ class _AppTextFieldState extends State<AppTextField> {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            if (_errorMessage != null)
+            if (_errorMessage != null && !widget.isReadOnly)
               Expanded(
                 child: _buildErrorText(
                   context,

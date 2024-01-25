@@ -11,7 +11,6 @@ import 'package:invoice_app/presentation/pages/home/screen/views/item_list_view.
 import 'package:invoice_app/presentation/pages/home/widgets/custom_button.dart';
 import 'package:invoice_app/presentation/presentation.dart';
 import 'package:invoice_app/presentation/resources/resources.dart';
-import 'package:invoice_app/presentation/widgets/dialog/app_dialog.dart';
 
 @RoutePage()
 class InvoiceDetailScreen extends StatelessWidget {
@@ -74,7 +73,7 @@ class InvoiceDetailScreen extends StatelessWidget {
             children: [
               _buildEditButton(context),
               _buildDeleteButton(context, state),
-              _buildMakePaidButton(),
+              _buildMakePaidButton(context),
             ],
           ),
         );
@@ -82,10 +81,17 @@ class InvoiceDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMakePaidButton() {
+  Widget _buildMakePaidButton(BuildContext context) {
     return CustomButton(
       onTap: () {
-        getIt.get<InvoicesControllerCubit>().makeInvoicePaid();
+        showConfirmDialog(
+          context,
+          title: 'Confirmation',
+          content: 'Please confirm that you have made the payment',
+          onConfirmButtonTap: () {
+            getIt.get<InvoicesControllerCubit>().makeInvoicePaid();
+          },
+        );
       },
       backgroundColor: const Color(0xFF7C5DF9),
       child: Text(
@@ -102,31 +108,18 @@ class InvoiceDetailScreen extends StatelessWidget {
     return CustomButton(
       backgroundColor: const Color(0xFFEC5757),
       onTap: () {
-        showAppDialog(
-          context,
-          title: 'Confirm Deletion',
-          content:
-              'Are you sure you want to delete invoice #${state.currentInvoice.id}? This action cannot be undone.',
-          actions: [
-            ActionAppDialog(
-              actionDialogTitle: 'Delete',
-              onAction: (context) {
-                getIt
-                    .get<InvoicesControllerCubit>()
-                    .deleteInvoice(state.currentInvoice.id)
-                    .then((value) {
-                  context.router.popUntilRouteWithName(HomeRoute.name);
-                });
-              },
-            ),
-            ActionAppDialog(
-              actionDialogTitle: 'Cancel',
-              onAction: (context) {
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        );
+        showConfirmDialog(context,
+            title: 'Confirm Deletion',
+            content:
+                'Are you sure you want to delete invoice #${state.currentInvoice.id}? This action cannot be undone.',
+            confirmButtonTitle: 'Delete', onConfirmButtonTap: () {
+          getIt
+              .get<InvoicesControllerCubit>()
+              .deleteInvoice(state.currentInvoice.id)
+              .then((value) {
+            context.router.popUntilRouteWithName(HomeRoute.name);
+          });
+        });
       },
       child: Text(
         'Delete',

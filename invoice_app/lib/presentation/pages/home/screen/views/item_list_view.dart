@@ -106,6 +106,7 @@ class ItemListView extends StatelessWidget {
                   flex: 3,
                   child: AppTextField(
                     isReadOnly: true,
+                    isCheckValidate: false,
                     initialText: (item.total ?? '').toString(),
                   ),
                 ),

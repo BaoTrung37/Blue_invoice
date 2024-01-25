@@ -18,10 +18,8 @@ Future<bool?> showConfirmDialog(
       ActionAppDialog(
         actionDialogTitle: confirmButtonTitle ?? 'Yes',
         onAction: (context) {
-          onConfirmButtonTap?.call();
-          // if (onConfirmButtonTap == null) {
           Navigator.of(context).pop(true);
-          // }
+          onConfirmButtonTap?.call();
         },
       ),
       ActionAppDialog(

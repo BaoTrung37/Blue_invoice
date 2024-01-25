@@ -76,22 +76,25 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildInvoiceList(InvoicesControllerState state) {
     final invoices = state.invoices;
     return Expanded(
-      child: ListView.separated(
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          return InvoiceItem(
-            invoice: invoices[index],
-            onTap: () {
-              context.pushRoute(
-                InvoiceDetailRoute(
-                  invoiceId: invoices[index].id,
-                ),
-              );
-            },
-          );
-        },
-        separatorBuilder: (context, index) => 16.verticalSpace,
-        itemCount: invoices.length,
+      child: Padding(
+        padding: EdgeInsets.only(bottom: 50.h),
+        child: ListView.separated(
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            return InvoiceItem(
+              invoice: invoices[index],
+              onTap: () {
+                context.pushRoute(
+                  InvoiceDetailRoute(
+                    invoiceId: invoices[index].id,
+                  ),
+                );
+              },
+            );
+          },
+          separatorBuilder: (context, index) => 16.verticalSpace,
+          itemCount: invoices.length,
+        ),
       ),
     );
   }
