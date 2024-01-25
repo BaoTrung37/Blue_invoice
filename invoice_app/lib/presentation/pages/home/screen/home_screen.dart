@@ -34,106 +34,34 @@ class _HomeScreenState extends State<HomeScreen> {
       create: (context) => getIt.get<InvoicesControllerCubit>(),
       child: Scaffold(
         backgroundColor: context.colors.backgroundPrimary,
-        body: SafeArea(
-          child: LiquidPullToRefresh(
-            onRefresh: () async =>
-                getIt.get<InvoicesControllerCubit>().fetchData(),
-            color: context.colors.backgroundSecondary,
-            showChildOpacityTransition: false,
-            animSpeedFactor: 2,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
-              child: Column(
-                children: [
-                  _buildHeading(),
-                  24.verticalSpace,
-                  const _MainContent(),
-                ],
-              ),
-            ),
+        body: _buildBody(context),
+        floatingActionButton: const _NewInvoiceFab(),
+      ),
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
+    return SafeArea(
+      child: LiquidPullToRefresh(
+        onRefresh: () async => getIt.get<InvoicesControllerCubit>().fetchData(),
+        color: context.colors.backgroundSecondary,
+        showChildOpacityTransition: false,
+        animSpeedFactor: 2,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+          child: Column(
+            children: [
+              _buildHeading(),
+              24.verticalSpace,
+              _buildContentView(),
+            ],
           ),
         ),
-        floatingActionButton: _buildNewInvoiceButton(context),
       ),
     );
   }
 
-  Widget _buildHeading() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Invoices',
-              style: AppTextStyles.h1,
-            ),
-            8.verticalSpace,
-            BlocBuilder<InvoicesControllerCubit, InvoicesControllerState>(
-              builder: (context, state) {
-                if (state.invoices.isNotEmpty) {
-                  return Text(
-                      'There are ${state.invoices.length} total invoices');
-                } else {
-                  return const Text('No Invoices');
-                }
-              },
-            ),
-          ],
-        ),
-        Row(
-          children: [
-            const Text('Filter by status'),
-            8.horizontalSpace,
-            Assets.icons.iconArrowDown.svg(
-              height: 12.h,
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildNewInvoiceButton(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        getIt.get<InvoicesControllerCubit>().clearTemporaryData();
-        showInvoiceFormBottomSheet(context);
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: context.colors.button1Color,
-          borderRadius: BorderRadius.circular(20.r),
-        ),
-        padding: EdgeInsets.all(6.r),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CircleAvatar(
-              radius: 15.r,
-              backgroundColor: context.colors.lightBackground,
-              child: Assets.icons.iconPlus.svg(),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.w),
-              child: const Text(
-                'New Invoice',
-                style: AppTextStyles.body1,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _MainContent extends StatelessWidget {
-  const _MainContent();
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildContentView() {
     return BlocBuilder<InvoicesControllerCubit, InvoicesControllerState>(
       builder: (context, state) {
         if (state.invoices.isNotEmpty) {
@@ -207,6 +135,81 @@ class _MainContent extends StatelessWidget {
               child: const Text(
                 'Import Fake data',
                 style: AppTextStyles.h2,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeading() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Invoices',
+              style: AppTextStyles.h1,
+            ),
+            8.verticalSpace,
+            BlocBuilder<InvoicesControllerCubit, InvoicesControllerState>(
+              builder: (context, state) {
+                if (state.invoices.isNotEmpty) {
+                  return Text(
+                      'There are ${state.invoices.length} total invoices');
+                } else {
+                  return const Text('No Invoices');
+                }
+              },
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            const Text('Filter by status'),
+            8.horizontalSpace,
+            Assets.icons.iconArrowDown.svg(
+              height: 12.h,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _NewInvoiceFab extends StatelessWidget {
+  const _NewInvoiceFab();
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        getIt.get<InvoicesControllerCubit>().clearTemporaryData();
+        showInvoiceFormBottomSheet(context);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: context.colors.button1Color,
+          borderRadius: BorderRadius.circular(20.r),
+        ),
+        padding: EdgeInsets.all(6.r),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircleAvatar(
+              radius: 15.r,
+              backgroundColor: context.colors.lightBackground,
+              child: Assets.icons.iconPlus.svg(),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.w),
+              child: const Text(
+                'New Invoice',
+                style: AppTextStyles.body1,
               ),
             ),
           ],
