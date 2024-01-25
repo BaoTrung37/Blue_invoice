@@ -8,6 +8,7 @@ import 'package:invoice_app/navigation/app_router.dart';
 import 'package:invoice_app/presentation/pages/home/screen/invoice_form.dart';
 import 'package:invoice_app/presentation/resources/app_colors.dart';
 import 'package:invoice_app/presentation/resources/app_text_styles.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 import '../../../cubits/invoices/invoices_controller_cubit.dart';
 import '../widgets/invoice_item.dart';
@@ -34,14 +35,21 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         backgroundColor: context.colors.backgroundPrimary,
         body: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
-            child: Column(
-              children: [
-                _buildHeading(),
-                24.verticalSpace,
-                const _MainContent(),
-              ],
+          child: LiquidPullToRefresh(
+            onRefresh: () async =>
+                getIt.get<InvoicesControllerCubit>().fetchData(),
+            color: context.colors.backgroundSecondary,
+            showChildOpacityTransition: false,
+            animSpeedFactor: 2,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+              child: Column(
+                children: [
+                  _buildHeading(),
+                  24.verticalSpace,
+                  const _MainContent(),
+                ],
+              ),
             ),
           ),
         ),

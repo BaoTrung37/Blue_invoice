@@ -73,6 +73,8 @@ dependencies:
   collection: ^1.18.0
   path_provider: ^2.1.2
 
+  liquid_pull_to_refresh: ^3.0.1
+  
   # Picker
   dropdown_button2: ^2.3.9
   flutter_holo_date_picker: ^1.1.3
